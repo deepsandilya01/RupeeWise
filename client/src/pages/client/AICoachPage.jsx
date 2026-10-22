@@ -13,8 +13,10 @@ import {
   deleteGoal,
   fetchBudgets,
   setBudget,
+  fetchAiStatus,
 } from '../../features/ai/aiThunks.js';
-import { addLocalUserMessage } from '../../features/ai/aiSlice.js';
+import { addLocalUserMessage, setSelectedProvider } from '../../features/ai/aiSlice.js';
+import MarkdownMessage from '../../components/common/MarkdownMessage.jsx';
 import {
   Sparkles,
   Bot,
@@ -48,6 +50,8 @@ export const AICoachPage = () => {
     coachLoading,
     simulationLoading,
     loading,
+    aiStatus,
+    selectedProvider,
   } = useAppSelector((state) => state.ai);
 
   // Active view tab synced with URL query (?tab=coach|actions|simulator|budgets|goals)
@@ -103,6 +107,7 @@ export const AICoachPage = () => {
     dispatch(fetchRecommendations());
     dispatch(fetchGoals());
     dispatch(fetchBudgets());
+    dispatch(fetchAiStatus());
     dispatch(
       runSimulation({
         category: simCategory,
@@ -118,7 +123,7 @@ export const AICoachPage = () => {
     if (!text.trim() || coachLoading) return;
 
     dispatch(addLocalUserMessage(text.trim()));
-    dispatch(askAICoach(text.trim()));
+    dispatch(askAICoach({ message: text.trim(), provider: selectedProvider }));
     setChatInput('');
   };
 
@@ -278,19 +283,30 @@ export const AICoachPage = () => {
           {/* Main Chat Stream (8 cols) */}
           <div className="lg:col-span-8 bg-white rounded-3xl border border-gray-200/80 shadow-[0_4px_16px_rgba(0,0,0,0.02)] p-5 flex flex-col justify-between min-h-[500px]">
             <div>
-              <div className="flex items-center justify-between pb-3 border-b border-gray-100 mb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-gray-100 mb-4 gap-2">
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-xl bg-coral-500 text-white flex items-center justify-center font-bold text-xs">
+                  <div className="w-7 h-7 rounded-xl bg-coral-500 text-white flex items-center justify-center font-bold text-xs shadow-xs">
                     <Sparkles className="w-4 h-4" />
                   </div>
                   <div>
                     <h3 className="text-sm font-extrabold text-[#0B1D33]">Coach Thread</h3>
-                    <p className="text-[10px] text-gray-400">Strictly scoped to your authenticated transactions</p>
+                    <p className="text-[10px] text-gray-400">Grounded in your authenticated financial records</p>
                   </div>
                 </div>
-                <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100">
-                  Live MongoDB Verified
-                </span>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Engine:</span>
+                  <select
+                    value={selectedProvider}
+                    onChange={(e) => dispatch(setSelectedProvider(e.target.value))}
+                    className="text-xs font-semibold bg-[#FAF6EE] text-[#073746] border border-[#E7DFD0] rounded-xl px-2.5 py-1 outline-none cursor-pointer hover:border-[#073746] transition-colors"
+                  >
+                    <option value="auto">Auto (Smart Fallback)</option>
+                    <option value="gemini">Google Gemini (Flash)</option>
+                    <option value="mistral">Mistral AI (Small)</option>
+                    <option value="rules-based">RupeeWise Rules Engine</option>
+                  </select>
+                </div>
               </div>
 
               {/* Message History */}
@@ -311,17 +327,36 @@ export const AICoachPage = () => {
                       className={`p-3.5 rounded-2xl text-xs leading-relaxed max-w-[85%] ${
                         m.sender === 'user'
                           ? 'bg-[#0C3846] text-white rounded-tr-none'
-                          : 'bg-[#FFF8F4] border border-[#FFE5D4] text-[#0B1D33] rounded-tl-none whitespace-pre-line'
+                          : 'bg-[#FFF8F4] border border-[#FFE5D4] text-[#0B1D33] rounded-tl-none'
                       }`}
                     >
-                      {m.text}
-                      {m.source && (
-                        <div className="mt-1.5 pt-1.5 border-t border-black/5 text-[9px] font-semibold text-gray-400 flex items-center justify-between">
+                      {m.sender === 'user' ? (
+                        <p className="whitespace-pre-line">{m.text}</p>
+                      ) : (
+                        <MarkdownMessage content={m.text} className="text-[#0B1D33]" />
+                      )}
+                      {m.sender === 'ai' && (
+                        <div className="mt-2 pt-2 border-t border-[#FFE5D4]/70 text-[9px] font-semibold text-gray-400 flex flex-wrap items-center justify-between gap-1">
                           <span className="flex items-center gap-1">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                            {m.source === 'rules-based' ? 'Rules Engine Deterministic Calculation' : 'AI Generated Response'}
+                            <span>
+                              {m.provider === 'gemini'
+                                ? 'Google Gemini'
+                                : m.provider === 'mistral'
+                                ? 'Mistral AI'
+                                : m.provider === 'rules-based' || m.source === 'rules-based'
+                                ? 'RupeeWise Financial Rules Engine'
+                                : 'RupeeWise AI'}
+                            </span>
+                            {m.model && <span className="text-gray-400 font-normal">({m.model})</span>}
                           </span>
                           <span>{new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        </div>
+                      )}
+                      {m.fallbackReason && (
+                        <div className="mt-1.5 text-[9px] font-medium text-amber-800 bg-amber-50/90 px-2 py-1 rounded-lg border border-amber-200/80 flex items-center gap-1.5">
+                          <span>⚡</span>
+                          <span>{m.fallbackReason.includes('Switched to') ? 'Switched to RupeeWise Financial Rules Engine' : m.fallbackReason}</span>
                         </div>
                       )}
                     </div>

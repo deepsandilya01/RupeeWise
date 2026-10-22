@@ -7,6 +7,7 @@ import {
   askAICoach,
   fetchGoals,
   fetchBudgets,
+  fetchAiStatus,
 } from './aiThunks.js';
 
 const initialState = {
@@ -32,12 +33,15 @@ const initialState = {
   simulationResult: null,
   goals: [],
   budgets: [],
+  aiStatus: null,
+  selectedProvider: 'auto',
   chatMessages: [
     {
       id: 'welcome-msg',
       sender: 'ai',
       text: "Hi Deep! 👋 I'm your RupeeWise AI Money Coach.\n\nI monitor your cashflow, analyze category trends, spot spending anomalies, and help you reach your financial goals faster.\n\nAsk me anything or choose a quick prompt below!",
-      source: 'rules-based',
+      provider: 'rules-based',
+      model: 'RupeeWise Deterministic Financial Rules Engine',
       suggestions: [
         'Where is most of my money going?',
         'How can I save ₹2,000 every month?',
@@ -58,6 +62,9 @@ export const aiSlice = createSlice({
   name: 'ai',
   initialState,
   reducers: {
+    setSelectedProvider(state, action) {
+      state.selectedProvider = action.payload;
+    },
     addLocalUserMessage(state, action) {
       state.chatMessages.push({
         id: 'user-' + Date.now(),
@@ -120,7 +127,9 @@ export const aiSlice = createSlice({
           id: 'ai-' + Date.now(),
           sender: 'ai',
           text: action.payload.reply,
-          source: action.payload.source || 'rules-based',
+          provider: action.payload.provider || action.payload.source || 'rules-based',
+          model: action.payload.model,
+          fallbackReason: action.payload.fallbackReason,
           suggestions: action.payload.suggestions || [],
           timestamp: new Date().toISOString(),
         });
@@ -130,8 +139,8 @@ export const aiSlice = createSlice({
         state.chatMessages.push({
           id: 'err-' + Date.now(),
           sender: 'ai',
-          text: 'Sorry, I encountered an issue analyzing your financial records. Please try again.',
-          source: 'error',
+          text: action.payload || 'Sorry, I encountered an issue analyzing your financial records. Please try again.',
+          provider: 'error',
           timestamp: new Date().toISOString(),
         });
       });
@@ -145,8 +154,13 @@ export const aiSlice = createSlice({
     builder.addCase(fetchBudgets.fulfilled, (state, action) => {
       state.budgets = action.payload || [];
     });
+
+    // 7. AI Status
+    builder.addCase(fetchAiStatus.fulfilled, (state, action) => {
+      state.aiStatus = action.payload;
+    });
   },
 });
 
-export const { addLocalUserMessage, clearChat } = aiSlice.actions;
+export const { setSelectedProvider, addLocalUserMessage, clearChat } = aiSlice.actions;
 export default aiSlice.reducer;

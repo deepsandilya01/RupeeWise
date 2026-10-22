@@ -39,10 +39,21 @@ export const aiService = {
   /**
    * Ask question to AI Money Coach
    * @param {string} message
-   * @returns {Promise<{ success: boolean, data: { reply: string, source: string, suggestions: Array } }>}
+   * @param {string} [provider] - 'auto' | 'gemini' | 'mistral' | 'rules-based'
+   * @returns {Promise<{ success: boolean, data: { reply: string, provider: string, model: string, suggestions: Array } }>}
    */
-  async askCoach(message) {
-    return apiClient.post('/ai/coach', { message });
+  async askCoach(message, provider = null) {
+    const payload = { message };
+    if (provider) payload.provider = provider;
+    return apiClient.post('/ai/coach', payload);
+  },
+
+  /**
+   * Get non-sensitive AI provider status and models
+   * @returns {Promise<{ success: boolean, data: Object }>}
+   */
+  async getAiStatus() {
+    return apiClient.get('/ai/status');
   },
 
   /**

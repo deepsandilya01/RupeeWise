@@ -96,13 +96,29 @@ export const aiController = {
   async askCoach(req, res, next) {
     try {
       const userId = req.user.id;
-      const { message } = req.body;
+      const { message, provider } = req.body;
 
-      const response = await aiProviderService.askCoach({ userId, message });
+      const response = await aiProviderService.askCoach({ userId, message, preferredProvider: provider });
 
       return res.status(200).json({
         success: true,
         data: response,
+      });
+    } catch (error) {
+      return next(error);
+    }
+  },
+
+  /**
+   * Get non-sensitive AI service configuration status
+   * GET /api/ai/status
+   */
+  async getStatus(req, res, next) {
+    try {
+      const status = aiProviderService.getAiStatus();
+      return res.status(200).json({
+        success: true,
+        data: status,
       });
     } catch (error) {
       return next(error);

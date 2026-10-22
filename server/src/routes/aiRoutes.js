@@ -17,6 +17,9 @@ router.patch('/recommendations/:id', aiController.updateRecommendationStatus);
 // What-If Simulator
 router.post('/simulate', aiController.simulate);
 
+// AI Service Status & Configuration (Non-sensitive)
+router.get('/status', aiController.getStatus);
+
 // AI Money Coach Chat Query
 router.post('/coach', aiController.askCoach);
 

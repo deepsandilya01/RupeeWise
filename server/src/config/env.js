@@ -46,7 +46,31 @@ export const config = {
     const normalized = email.toLowerCase().trim();
     return adminEmails.has(normalized) || normalized === 'demo-admin@rupeewise.ai';
   },
+  // AI Provider Configuration (Maps both existing GEMINI_API / MISTRAL_API and standard names)
+  GEMINI_API_KEY: (process.env.GEMINI_API_KEY || process.env.GEMINI_API || '').trim(),
+  MISTRAL_API_KEY: (process.env.MISTRAL_API_KEY || process.env.MISTRAL_API || '').trim(),
+  GEMINI_MODEL: (process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite').trim(),
+  MISTRAL_MODEL: (process.env.MISTRAL_MODEL || 'ministral-8b-latest').trim(),
+  AI_PROVIDER: (process.env.AI_PROVIDER || 'auto').trim().toLowerCase(),
+  AI_TIMEOUT_MS: parseInt(process.env.AI_TIMEOUT_MS, 10) || 10000,
+  getSafeAiConfig: () => ({
+    activeProvider: config.AI_PROVIDER,
+    providers: {
+      gemini: {
+        configured: Boolean(config.GEMINI_API_KEY),
+        model: config.GEMINI_MODEL,
+      },
+      mistral: {
+        configured: Boolean(config.MISTRAL_API_KEY),
+        model: config.MISTRAL_MODEL,
+      },
+      rulesEngine: {
+        configured: true,
+        model: 'RupeeWise Deterministic Financial Rules Engine',
+      },
+    },
+    timeoutMs: config.AI_TIMEOUT_MS,
+  }),
 };
-
 
 export default config;

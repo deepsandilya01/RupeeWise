@@ -51,11 +51,25 @@ export const runSimulation = createAsyncThunk(
   }
 );
 
+export const fetchAiStatus = createAsyncThunk(
+  'ai/fetchAiStatus',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await aiService.getAiStatus();
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message || 'Failed to fetch AI provider status');
+    }
+  }
+);
+
 export const askAICoach = createAsyncThunk(
   'ai/askAICoach',
-  async (message, { rejectWithValue }) => {
+  async (arg, { rejectWithValue }) => {
     try {
-      const response = await aiService.askCoach(message);
+      const message = typeof arg === 'string' ? arg : arg.message;
+      const provider = typeof arg === 'object' ? arg.provider : null;
+      const response = await aiService.askCoach(message, provider);
       return { query: message, ...response.data };
     } catch (error) {
       return rejectWithValue(error.message || 'Failed to query AI coach');

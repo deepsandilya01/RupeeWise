@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Sparkles,
   X,
@@ -12,20 +12,26 @@ import {
   ArrowRight,
   Loader2,
   ExternalLink,
+  Cpu,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth.js';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.js';
-import { askAICoach } from '../../features/ai/aiThunks.js';
-import { addLocalUserMessage } from '../../features/ai/aiSlice.js';
+import { askAICoach, fetchAiStatus } from '../../features/ai/aiThunks.js';
+import { addLocalUserMessage, setSelectedProvider } from '../../features/ai/aiSlice.js';
+import MarkdownMessage from '../common/MarkdownMessage.jsx';
 
 export const AIMoneyCoachWidget = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { chatMessages, coachLoading } = useAppSelector((state) => state.ai);
+  const { chatMessages, coachLoading, aiStatus, selectedProvider } = useAppSelector((state) => state.ai);
 
   const [inputMessage, setInputMessage] = useState('');
+
+  useEffect(() => {
+    dispatch(fetchAiStatus());
+  }, [dispatch]);
 
   const quickPrompts = [
     { id: 'analyze', text: 'Where is most of my money going?', icon: <PieChart className="w-3.5 h-3.5" /> },
@@ -41,8 +47,15 @@ export const AIMoneyCoachWidget = () => {
     if (!query.trim() || coachLoading) return;
 
     dispatch(addLocalUserMessage(query.trim()));
-    dispatch(askAICoach(query.trim()));
+    dispatch(askAICoach({ message: query.trim(), provider: selectedProvider }));
     setInputMessage('');
+  };
+
+  const formatProviderLabel = (p) => {
+    if (p === 'gemini') return 'Gemini Flash';
+    if (p === 'mistral') return 'Mistral AI';
+    if (p === 'rules-based') return 'Rules Engine';
+    return 'RupeeWise AI';
   };
 
   return (
@@ -57,13 +70,28 @@ export const AIMoneyCoachWidget = () => {
               <span>AI Money Coach</span>
             </h3>
           </div>
-          <button
-            onClick={() => navigate('/ai-coach')}
-            className="text-gray-400 hover:text-[#0C3846] transition-colors p-1 rounded-lg hover:bg-gray-100"
-            title="Open Full AI Coach Workspace"
-          >
-            <ExternalLink className="w-3.5 h-3.5" />
-          </button>
+          <div className="flex items-center gap-1.5">
+            {/* Provider Pill Selector */}
+            <select
+              value={selectedProvider}
+              onChange={(e) => dispatch(setSelectedProvider(e.target.value))}
+              className="text-[10px] font-semibold bg-[#FAF6EE] text-[#073746] border border-[#E7DFD0] rounded-lg px-1.5 py-0.5 outline-none cursor-pointer"
+              title="Select active AI Provider"
+            >
+              <option value="auto">Auto (Smart)</option>
+              <option value="gemini">Google Gemini</option>
+              <option value="mistral">Mistral AI</option>
+              <option value="rules-based">Rules Engine</option>
+            </select>
+
+            <button
+              onClick={() => navigate('/ai-coach')}
+              className="text-gray-400 hover:text-[#0C3846] transition-colors p-1 rounded-lg hover:bg-gray-100"
+              title="Open Full AI Coach Workspace"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
         <p className="text-[11px] text-gray-400 mt-1 mb-3">
           Personalized financial advice grounded in your transactions
@@ -87,14 +115,25 @@ export const AIMoneyCoachWidget = () => {
                 className={`p-3 rounded-2xl text-[11px] leading-relaxed max-w-[85%] ${
                   m.sender === 'user'
                     ? 'bg-[#0C3846] text-white rounded-tr-none'
-                    : 'bg-[#FFF8F4] border border-[#FFE5D4] text-[#0B1D33] rounded-tl-none whitespace-pre-line'
+                    : 'bg-[#FFF8F4] border border-[#FFE5D4] text-[#0B1D33] rounded-tl-none'
                 }`}
               >
-                {m.text}
-                {m.source && (
-                  <div className="mt-1 text-[9px] font-semibold text-gray-400 flex items-center gap-1">
+                {m.sender === 'user' ? (
+                  <p className="whitespace-pre-line">{m.text}</p>
+                ) : (
+                  <MarkdownMessage content={m.text} className="text-[#0B1D33]" />
+                )}
+                {m.sender === 'ai' && (
+                  <div className="mt-2 pt-1.5 border-t border-[#FFE5D4]/60 text-[9px] font-semibold text-gray-400 flex flex-wrap items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                    <span>{m.source === 'rules-based' ? 'Rules Engine Verified' : 'AI Powered'}</span>
+                    <span>{formatProviderLabel(m.provider || m.source)}</span>
+                    {m.model && <span className="text-gray-400 font-normal">({m.model})</span>}
+                  </div>
+                )}
+                {m.fallbackReason && (
+                  <div className="mt-1.5 text-[9px] font-medium text-amber-800 bg-amber-50/90 px-2 py-1 rounded-lg border border-amber-200/70 flex items-center gap-1">
+                    <span>⚡</span>
+                    <span>{m.fallbackReason.includes('Switched to') ? 'Switched to RupeeWise Financial Rules Engine' : m.fallbackReason}</span>
                   </div>
                 )}
               </div>
