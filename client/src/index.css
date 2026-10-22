@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --canvas: #F7F7F2;
+  --primary: #174B38;
+  --charcoal: #1A1D1A;
+}
+
+body {
+  background-color: #F7F7F2;
+  color: #1A1D1A;
+  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F7F7F2;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D1DDD3;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #95C2AF;
+}
+
+/* Accessible focus ring */
+:focus-visible {
+  outline: 2px solid #174B38;
+  outline-offset: 2px;
+}

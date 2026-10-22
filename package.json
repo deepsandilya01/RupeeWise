@@ -1,0 +1,19 @@
+{
+  "name": "paisapilot-ai",
+  "version": "1.0.0",
+  "description": "PaisaPilot AI — AI-Powered Personal Finance Coach (Phase 1: Foundation + Google Auth + RBAC)",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "dev:server": "npm run dev --prefix server",
+    "dev:client": "npm run dev --prefix client",
+    "build:client": "npm run build --prefix client",
+    "build": "npm run build:client",
+    "install:all": "npm install && npm install --prefix server && npm install --prefix client",
+    "test:server": "node server/src/tests/test_endpoints.js"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
