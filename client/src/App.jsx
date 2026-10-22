@@ -12,6 +12,9 @@ import DashboardPage from './pages/client/DashboardPage.jsx';
 import TransactionsPage from './pages/client/TransactionsPage.jsx';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage.jsx';
 import AICoachPage from './pages/client/AICoachPage.jsx';
+import SettingsPage from './pages/client/SettingsPage.jsx';
+import HelpSupportPage from './pages/client/HelpSupportPage.jsx';
+import NotificationsPage from './pages/client/NotificationsPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import LandingPage from './pages/public/LandingPage.jsx';
 
@@ -40,6 +43,14 @@ export const App = () => {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/transactions" element={<TransactionsPage />} />
           <Route path="/ai-coach" element={<AICoachPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/help" element={<HelpSupportPage />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
+          {/* Functional Navigation Aliases */}
+          <Route path="/budgets" element={<Navigate to="/ai-coach?tab=budgets" replace />} />
+          <Route path="/goals" element={<Navigate to="/ai-coach?tab=goals" replace />} />
+          <Route path="/simulator" element={<Navigate to="/ai-coach?tab=simulator" replace />} />
+          <Route path="/insights" element={<Navigate to="/ai-coach?tab=actions" replace />} />
         </Route>
 
         {/* Protected Admin Routes */}

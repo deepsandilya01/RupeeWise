@@ -1,14 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Bell, Calendar, ChevronDown, LogOut, Shield, Menu } from 'lucide-react';
+import { Search, Bell, Calendar, ChevronDown, LogOut, Shield, Menu, Settings, HelpCircle } from 'lucide-react';
 import useAuth from '../../hooks/useAuth.js';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAppDispatch } from '../../app/hooks.js';
+import { fetchTransactionSummary } from '../../features/transactions/transactionThunks.js';
 
 export const DashboardHeader = ({ onOpenMobileSidebar }) => {
   const { user, role, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [profileOpen, setProfileOpen] = useState(false);
   const [dateMenuOpen, setDateMenuOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState('October 2026');
+  const [searchTerm, setSearchTerm] = useState('');
   const profileRef = useRef(null);
 
   useEffect(() => {
@@ -25,6 +29,25 @@ export const DashboardHeader = ({ onOpenMobileSidebar }) => {
     setProfileOpen(false);
     await logout();
     navigate('/login');
+  };
+
+  const handleSearchKeyDown = (e) => {
+    if (e.key === 'Enter' && searchTerm.trim()) {
+      navigate(`/transactions?search=${encodeURIComponent(searchTerm.trim())}`);
+      setSearchTerm('');
+    }
+  };
+
+  const handleMonthSelect = (m) => {
+    setSelectedMonth(m);
+    setDateMenuOpen(false);
+    const monthMap = {
+      'October 2026': { month: 10, year: 2026 },
+      'September 2026': { month: 9, year: 2026 },
+      'August 2026': { month: 8, year: 2026 },
+    };
+    const params = monthMap[m] || { month: 10, year: 2026 };
+    dispatch(fetchTransactionSummary(params));
   };
 
   const displayName = user?.name || 'Deep Sandilya';
@@ -45,7 +68,10 @@ export const DashboardHeader = ({ onOpenMobileSidebar }) => {
           <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
-            placeholder="Search transactions, insights, or ask AI..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={handleSearchKeyDown}
+            placeholder="Search transactions, press Enter to view..."
             className="w-full pl-9 pr-4 py-2 text-xs bg-[#FFFCF8] border border-gray-200/90 rounded-full focus:outline-none focus:ring-2 focus:ring-[#073746]/30 text-[#0B1D33] placeholder-gray-400 transition-all shadow-2xs"
           />
         </div>
@@ -54,10 +80,14 @@ export const DashboardHeader = ({ onOpenMobileSidebar }) => {
       {/* Right Controls */}
       <div className="flex items-center gap-3 sm:gap-4">
         {/* Notification Bell */}
-        <div className="relative p-2 rounded-full bg-white border border-gray-200/80 hover:bg-gray-50 cursor-pointer shadow-2xs">
+        <button
+          onClick={() => navigate('/notifications')}
+          className="relative p-2 rounded-full bg-white border border-gray-200/80 hover:bg-gray-50 cursor-pointer shadow-2xs transition-colors"
+          title="View Notifications & Alerts"
+        >
           <Bell className="w-4 h-4 text-gray-600" />
-          <span className="w-2 h-2 rounded-full bg-coral-500 absolute top-1.5 right-1.5" />
-        </div>
+          <span className="w-2 h-2 rounded-full bg-coral-500 absolute top-1.5 right-1.5 animate-pulse" />
+        </button>
 
         {/* User Profile Dropdown */}
         <div className="relative" ref={profileRef}>
@@ -117,6 +147,26 @@ export const DashboardHeader = ({ onOpenMobileSidebar }) => {
                 </div>
               )}
 
+              <div className="py-1 border-t border-gray-100">
+                <Link
+                  to="/settings"
+                  onClick={() => setProfileOpen(false)}
+                  className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-peach-50 hover:text-[#073746]"
+                >
+                  <Settings className="w-4 h-4 text-gray-500" />
+                  <span>Account Settings</span>
+                </Link>
+
+                <Link
+                  to="/help"
+                  onClick={() => setProfileOpen(false)}
+                  className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-peach-50 hover:text-[#073746]"
+                >
+                  <HelpCircle className="w-4 h-4 text-gray-500" />
+                  <span>Help &amp; FAQ</span>
+                </Link>
+              </div>
+
               <div className="pt-1 border-t border-gray-100">
                 <button
                   onClick={handleLogout}
@@ -146,10 +196,7 @@ export const DashboardHeader = ({ onOpenMobileSidebar }) => {
               {['October 2026', 'September 2026', 'August 2026'].map((m) => (
                 <button
                   key={m}
-                  onClick={() => {
-                    setSelectedMonth(m);
-                    setDateMenuOpen(false);
-                  }}
+                  onClick={() => handleMonthSelect(m)}
                   className={`w-full text-left px-3 py-1.5 rounded-lg ${
                     selectedMonth === m ? 'bg-peach-100 text-[#073746] font-bold' : 'hover:bg-gray-50'
                   }`}

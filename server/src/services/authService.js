@@ -1,6 +1,7 @@
 import { OAuth2Client } from 'google-auth-library';
 import config from '../config/env.js';
 import userRepository from '../repositories/userRepository.js';
+import activityLogRepository from '../repositories/activityLogRepository.js';
 import { generateToken } from '../utils/token.js';
 import { isDatabaseReady } from '../config/database.js';
 
@@ -128,6 +129,15 @@ export const authService = {
       userId: user._id.toString(),
       role: user.role,
     });
+
+    // Record non-sensitive authentication activity
+    activityLogRepository.create({
+      type: 'user_login',
+      actorId: user._id,
+      actorName: user.name,
+      actorEmail: user.email,
+      summary: `User '${user.email}' signed in via Google OAuth (${user.role})`,
+    }).catch(() => {});
 
     return {
       user: typeof user.toSafeObject === 'function' ? user.toSafeObject() : {

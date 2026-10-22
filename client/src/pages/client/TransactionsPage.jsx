@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.js';
 import {
   fetchTransactions,
@@ -54,6 +55,7 @@ const CATEGORIES = [
 
 export const TransactionsPage = () => {
   const dispatch = useAppDispatch();
+  const [searchParams] = useSearchParams();
   const { items, pagination, filters, summary, loading, mutationLoading, error } =
     useAppSelector((state) => state.transactions);
 
@@ -65,9 +67,14 @@ export const TransactionsPage = () => {
 
   // Initial load
   useEffect(() => {
+    const urlSearch = searchParams.get('search');
+    const effectiveFilters = urlSearch ? { ...filters, search: urlSearch } : filters;
+    if (urlSearch) {
+      dispatch(setFilters({ search: urlSearch }));
+    }
     dispatch(fetchTransactionSummary());
-    dispatch(fetchTransactions(filters));
-  }, [dispatch]);
+    dispatch(fetchTransactions(effectiveFilters));
+  }, [dispatch, searchParams]);
 
   // Refetch when filters or pagination change
   const handleFilterChange = (updates) => {

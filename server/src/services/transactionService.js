@@ -1,4 +1,5 @@
 import transactionRepository from '../repositories/transactionRepository.js';
+import activityLogRepository from '../repositories/activityLogRepository.js';
 
 export const transactionService = {
   /**
@@ -26,6 +27,15 @@ export const transactionService = {
     };
 
     const created = await transactionRepository.create(payload);
+
+    // Non-blocking non-sensitive system activity log
+    activityLogRepository.create({
+      type: 'transaction_created',
+      actorId: userId,
+      summary: `New ${payload.type} transaction recorded in '${payload.category}'`,
+      metadata: { category: payload.category, type: payload.type },
+    }).catch(() => {});
+
     return created.toSafeObject();
   },
 

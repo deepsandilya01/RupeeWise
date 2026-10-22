@@ -320,6 +320,53 @@ export const transactionRepository = {
       monthlyHistory,
     };
   },
+
+  /**
+   * Count total transactions recorded in the entire database (for admin overview)
+   * @returns {Promise<number>}
+   */
+  async countAll() {
+    return Transaction.countDocuments().exec();
+  },
+
+  /**
+   * Aggregate total income and expense volume recorded across all users (for admin overview)
+   * @returns {Promise<{ totalIncome: number, totalExpense: number }>}
+   */
+  async aggregateGlobalVolume() {
+    const result = await Transaction.aggregate([
+      {
+        $group: {
+          _id: '$type',
+          totalAmount: { $sum: '$amount' },
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    let totalIncome = 0;
+    let totalExpense = 0;
+    result.forEach((r) => {
+      if (r._id === 'income') totalIncome = r.totalAmount;
+      if (r._id === 'expense') totalExpense = r.totalAmount;
+    });
+
+    return { totalIncome, totalExpense };
+  },
+
+  /**
+   * Count distinct users who created or recorded transactions in the past N days (for active user metric)
+   * @param {number} [days=30]
+   * @returns {Promise<number>}
+   */
+  async countActiveUsers(days = 30) {
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - days);
+    const distinctUsers = await Transaction.distinct('userId', {
+      $or: [{ createdAt: { $gte: cutoff } }, { date: { $gte: cutoff } }],
+    });
+    return distinctUsers.length;
+  },
 };
 
 export default transactionRepository;

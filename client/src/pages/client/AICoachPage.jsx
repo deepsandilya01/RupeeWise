@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.js';
 import {
   fetchAIInsights,
@@ -36,6 +37,7 @@ import {
 
 export const AICoachPage = () => {
   const dispatch = useAppDispatch();
+  const [searchParams, setSearchParams] = useSearchParams();
   const {
     insights,
     recommendations,
@@ -48,8 +50,24 @@ export const AICoachPage = () => {
     loading,
   } = useAppSelector((state) => state.ai);
 
-  // Active view tab
-  const [activeTab, setActiveTab] = useState('coach'); // 'coach' | 'actions' | 'simulator' | 'budgets' | 'goals'
+  // Active view tab synced with URL query (?tab=coach|actions|simulator|budgets|goals)
+  const urlTab = searchParams.get('tab');
+  const validTabs = ['coach', 'actions', 'simulator', 'budgets', 'goals'];
+  const initialTab = validTabs.includes(urlTab) ? urlTab : 'coach';
+  const [activeTab, setActiveTab] = useState(initialTab);
+
+  useEffect(() => {
+    const currentTab = searchParams.get('tab');
+    if (currentTab && validTabs.includes(currentTab)) {
+      setActiveTab(currentTab);
+    }
+  }, [searchParams]);
+
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    setSearchParams({ tab: tabId });
+  };
+
   const [chatInput, setChatInput] = useState('');
 
   // Simulator local state
@@ -239,7 +257,7 @@ export const AICoachPage = () => {
         ].map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
+            onClick={() => handleTabChange(tab.id)}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
               activeTab === tab.id
                 ? 'bg-[#0C3846] text-white shadow-sm'

@@ -21,22 +21,23 @@ export const DashboardSidebar = ({ mobileOpen, setMobileOpen, activeTab, setActi
   const mainNav = [
     { id: 'dashboard', path: '/dashboard', name: 'Dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
     { id: 'transactions', path: '/transactions', name: 'Transactions', icon: <Receipt className="w-4 h-4" /> },
-    { id: 'ai-coach', path: '/ai-coach', name: 'AI Coach', icon: <Bot className="w-4 h-4" /> },
-    { id: 'budget', path: '/ai-coach', name: 'Budget', icon: <PieChart className="w-4 h-4" /> },
-    { id: 'goals', path: '/ai-coach', name: 'Goals', icon: <Target className="w-4 h-4" /> },
-    { id: 'simulator', path: '/ai-coach', name: 'Simulator', icon: <Activity className="w-4 h-4" /> },
-    { id: 'insights', path: '/ai-coach', name: 'Insights', icon: <Compass className="w-4 h-4" /> },
+    { id: 'ai-coach', path: '/ai-coach?tab=coach', name: 'AI Coach', icon: <Bot className="w-4 h-4" /> },
+    { id: 'budget', path: '/ai-coach?tab=budgets', name: 'Budget', icon: <PieChart className="w-4 h-4" /> },
+    { id: 'goals', path: '/ai-coach?tab=goals', name: 'Goals', icon: <Target className="w-4 h-4" /> },
+    { id: 'simulator', path: '/ai-coach?tab=simulator', name: 'Simulator', icon: <Activity className="w-4 h-4" /> },
+    { id: 'insights', path: '/ai-coach?tab=actions', name: 'Insights', icon: <Compass className="w-4 h-4" /> },
   ];
 
   const secondaryNav = [
     {
       id: 'notifications',
+      path: '/notifications',
       name: 'Notifications',
       icon: <Bell className="w-4 h-4" />,
       badge: 3,
     },
-    { id: 'settings', name: 'Settings', icon: <Settings className="w-4 h-4" /> },
-    { id: 'help', name: 'Help & Support', icon: <HelpCircle className="w-4 h-4" /> },
+    { id: 'settings', path: '/settings', name: 'Settings', icon: <Settings className="w-4 h-4" /> },
+    { id: 'help', path: '/help', name: 'Help & Support', icon: <HelpCircle className="w-4 h-4" /> },
   ];
 
   const handleNavClick = (item) => {
@@ -114,28 +115,30 @@ export const DashboardSidebar = ({ mobileOpen, setMobileOpen, activeTab, setActi
 
           {/* Secondary Navigation */}
           <nav className="space-y-1 text-xs font-medium text-white/70">
-            {secondaryNav.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => {
-                  setActiveTab(item.id);
-                  setMobileOpen(false);
-                }}
-                className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl hover:bg-white/5 transition-colors ${
-                  activeTab === item.id ? 'bg-white/10 text-white font-bold' : ''
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-white/60">{item.icon}</span>
-                  <span>{item.name}</span>
-                </div>
-                {item.badge && (
-                  <span className="w-4 h-4 rounded-full bg-coral-500 text-white font-bold text-[9px] flex items-center justify-center">
-                    {item.badge}
-                  </span>
-                )}
-              </button>
-            ))}
+            {secondaryNav.map((item) => {
+              const isActive = location.pathname === item.path;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => handleNavClick(item)}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-all ${
+                    isActive
+                      ? 'bg-white/15 text-white font-bold'
+                      : 'hover:bg-white/5 text-white/75 hover:text-white'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className={isActive ? 'text-white' : 'text-white/60'}>{item.icon}</span>
+                    <span>{item.name}</span>
+                  </div>
+                  {item.badge && (
+                    <span className="w-4 h-4 rounded-full bg-coral-500 text-white font-bold text-[9px] flex items-center justify-center">
+                      {item.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </nav>
         </div>
 

@@ -83,6 +83,44 @@ export const userRepository = {
       .select('-__v')
       .exec();
   },
+
+  /**
+   * Find paginated users with optional search and role filtering
+   * @param {Object} params
+   * @returns {Promise<{ users: Array, total: number, page: number, totalPages: number }>}
+   */
+  async findPaginated({ search, role, page = 1, limit = 10 } = {}) {
+    const query = {};
+
+    if (role && ['client', 'admin'].includes(role)) {
+      query.role = role;
+    }
+
+    if (search && search.trim()) {
+      const searchRegex = new RegExp(search.trim(), 'i');
+      query.$or = [{ name: searchRegex }, { email: searchRegex }];
+    }
+
+    const skip = (Math.max(1, page) - 1) * limit;
+
+    const [users, total] = await Promise.all([
+      User.find(query)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .select('-__v')
+        .exec(),
+      User.countDocuments(query).exec(),
+    ]);
+
+    return {
+      users,
+      total,
+      page: Number(page),
+      limit: Number(limit),
+      totalPages: Math.ceil(total / limit) || 1,
+    };
+  },
 };
 
 export default userRepository;
