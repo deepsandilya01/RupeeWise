@@ -33,7 +33,7 @@ export const DashboardMockup = () => {
                   fill="#5EA286"
                 />
               </svg>
-              <span className="font-bold text-xs tracking-tight">PaisaPilot AI</span>
+              <span className="font-bold text-xs tracking-tight">RupeeWise AI</span>
             </div>
 
             {/* Nav Items */}

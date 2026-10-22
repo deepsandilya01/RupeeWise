@@ -42,3 +42,21 @@ body {
   outline: 2px solid #174B38;
   outline-offset: 2px;
 }
+
+@keyframes wave {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  20%, 60% {
+    transform: rotate(14deg);
+  }
+  40%, 80% {
+    transform: rotate(-10deg);
+  }
+}
+
+.animate-wave {
+  display: inline-block;
+  transform-origin: 70% 70%;
+  animation: wave 2.2s ease-in-out infinite;
+}

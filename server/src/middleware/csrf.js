@@ -18,7 +18,10 @@ export const csrfProtection = (req, res, next) => {
 
   const origin = req.headers['origin'];
   const referer = req.headers['referer'];
-  const customHeader = req.headers['x-requested-with'] || req.headers['x-paisapilot-client'];
+  const customHeader =
+    req.headers['x-requested-with'] ||
+    req.headers['x-rupeewise-client'] ||
+    req.headers['x-paisapilot-client'];
 
   const allowedOrigin = new URL(config.CLIENT_URL).origin;
 

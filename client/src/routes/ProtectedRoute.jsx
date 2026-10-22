@@ -14,7 +14,7 @@ export const ProtectedRoute = () => {
             <span className="text-white font-bold text-xl">P</span>
           </div>
           <span className="font-extrabold text-2xl tracking-tight text-forest-800">
-            PaisaPilot <span className="text-forest-600 font-semibold text-lg">AI</span>
+            RupeeWise <span className="text-[#3D8569] font-semibold text-lg">AI</span>
           </span>
         </div>
         <div className="flex items-center space-x-2 text-charcoal-600 text-sm">

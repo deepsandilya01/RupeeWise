@@ -17,7 +17,7 @@ export const NotFoundPage = () => {
             Page Not Found
           </h1>
           <p className="text-xs text-charcoal-600 max-w-sm mx-auto leading-relaxed">
-            The destination you are trying to navigate to does not exist or has been relocated in the PaisaPilot AI architecture.
+            The destination you are trying to navigate to does not exist or has been relocated in the RupeeWise architecture.
           </p>
         </div>
 

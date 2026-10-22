@@ -54,7 +54,7 @@ export const LandingPage = () => {
             <Link to="/login" className="hover:text-coral-500 transition-colors">Client Sign In</Link>
           </div>
           <p className="text-[11px] text-gray-400">
-            PaisaPilot AI &copy; {new Date().getFullYear()} &mdash; AI-Powered Personal Finance Coach. All rights reserved.
+            RupeeWise AI &copy; {new Date().getFullYear()} &mdash; Intelligent Wealth &amp; Expense Tracking Platform. All rights reserved.
           </p>
         </div>
       </footer>

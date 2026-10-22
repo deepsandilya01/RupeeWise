@@ -53,7 +53,7 @@ export const ProductShowcase = () => {
           <div className="lg:col-span-6 space-y-6 text-left">
             {/* Pill Badge */}
             <div className="inline-flex items-center px-3.5 py-1 rounded-full bg-[#FFEADB] text-[11px] font-bold uppercase tracking-wider text-[#073746]">
-              WHY PAISAPILOT AI
+              WHY RUPEEWISE AI
             </div>
 
             {/* Headline */}

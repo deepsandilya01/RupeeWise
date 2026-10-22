@@ -40,14 +40,14 @@ export const LoginPage = () => {
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-forest-800 text-white font-bold text-2xl shadow-subtle mb-4">
             ₹
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-forest-800">
-            PaisaPilot <span className="text-forest-600 font-semibold text-xl">AI</span>
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0C2B35]">
+            RupeeWise <span className="text-[#3D8569] font-semibold text-xl">AI</span>
           </h1>
           <p className="mt-1.5 text-xs font-semibold uppercase tracking-wider text-charcoal-500">
-            Track smarter. Spend better. Save faster.
+            Smart Transactions. Real Wealth. Total Clarity.
           </p>
           <p className="mt-3 text-xs text-charcoal-600 leading-relaxed max-w-xs mx-auto">
-            Your intelligent personal finance co-pilot powered by AI budgeting and automated cashflow insights.
+            Your intelligent personal finance engine with real-time transaction tracking, budgeting, and automated cashflow insights.
           </p>
         </div>
 

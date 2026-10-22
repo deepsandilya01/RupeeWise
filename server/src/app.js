@@ -9,6 +9,10 @@ import notFound from './middleware/notFound.js';
 import authRoutes from './routes/authRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import healthRoutes from './routes/healthRoutes.js';
+import transactionRoutes from './routes/transactionRoutes.js';
+import aiRoutes from './routes/aiRoutes.js';
+import goalRoutes from './routes/goalRoutes.js';
+import budgetRoutes from './routes/budgetRoutes.js';
 
 const app = express();
 
@@ -24,7 +28,7 @@ const corsOptions = {
   origin: config.CLIENT_URL,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-PaisaPilot-Client'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-RupeeWise-Client', 'X-PaisaPilot-Client'],
 };
 
 app.use(cors(corsOptions));
@@ -45,6 +49,10 @@ app.use(csrfProtection);
 app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/transactions', transactionRoutes);
+app.use('/api/ai', aiRoutes);
+app.use('/api/goals', goalRoutes);
+app.use('/api/budgets', budgetRoutes);
 
 // 404 Handler for undefined routes
 app.use(notFound);

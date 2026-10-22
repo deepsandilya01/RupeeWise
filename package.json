@@ -11,7 +11,10 @@
     "build:client": "npm run build --prefix client",
     "build": "npm run build:client",
     "install:all": "npm install && npm install --prefix server && npm install --prefix client",
-    "test:server": "node server/src/tests/test_endpoints.js"
+    "test:server": "node server/src/tests/test_endpoints.js",
+    "test:transactions": "node server/src/tests/test_transactions.js",
+    "test:ai": "node server/src/tests/test_ai_engine.js",
+    "test": "node server/src/tests/test_endpoints.js && node server/src/tests/test_transactions.js && node server/src/tests/test_ai_engine.js"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

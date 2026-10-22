@@ -9,6 +9,7 @@ import ClientLayout from './layouts/ClientLayout.jsx';
 import AdminLayout from './layouts/AdminLayout.jsx';
 import LoginPage from './pages/auth/LoginPage.jsx';
 import DashboardPage from './pages/client/DashboardPage.jsx';
+import TransactionsPage from './pages/client/TransactionsPage.jsx';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import LandingPage from './pages/public/LandingPage.jsx';
@@ -36,6 +37,7 @@ export const App = () => {
       <Route element={<ProtectedRoute />}>
         <Route element={<ClientLayout />}>
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/transactions" element={<TransactionsPage />} />
         </Route>
 
         {/* Protected Admin Routes */}

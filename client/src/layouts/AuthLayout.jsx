@@ -9,8 +9,8 @@ export const AuthLayout = () => {
           <div className="w-8 h-8 rounded-xl bg-forest-800 text-white flex items-center justify-center font-bold text-base shadow-subtle">
             ₹
           </div>
-          <span className="font-extrabold text-xl tracking-tight text-forest-800">
-            PaisaPilot <span className="text-forest-600 font-semibold text-sm">AI</span>
+          <span className="font-extrabold text-xl tracking-tight text-[#0C2B35]">
+            RupeeWise <span className="text-[#3D8569] font-semibold text-sm">AI</span>
           </span>
         </div>
       </header>
@@ -21,7 +21,7 @@ export const AuthLayout = () => {
 
       <footer className="max-w-7xl mx-auto w-full text-center py-4 border-t border-gray-200/60">
         <p className="text-xs text-charcoal-400">
-          PaisaPilot AI &copy; {new Date().getFullYear()} &mdash; Privacy-conscious AI Financial Intelligence. Safe, Encrypted &amp; Non-custodial.
+          RupeeWise AI &copy; {new Date().getFullYear()} &mdash; Smart Wealth &amp; Expense Tracking. Encrypted &amp; Secure.
         </p>
       </footer>
     </div>

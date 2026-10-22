@@ -11,6 +11,7 @@ export const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
     'X-Requested-With': 'XMLHttpRequest',
+    'X-RupeeWise-Client': 'web',
     'X-PaisaPilot-Client': 'web',
   },
   timeout: 15000,

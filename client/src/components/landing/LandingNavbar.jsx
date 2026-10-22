@@ -30,24 +30,16 @@ export const LandingNavbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         {/* Brand Logo & Name */}
         <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="relative w-8 h-8 flex items-center justify-center">
-            {/* Custom Paisley / Dual-Petal Logo matching screenshot */}
-            <svg viewBox="0 0 32 32" className="w-8 h-8" fill="none">
-              <path
-                d="M16 4C10 4 6 9 6 15C6 21 11 25 16 28C13 24 13 18 16 14C19 10 23 8 26 4C22 4 19 4 16 4Z"
-                fill="#FF624F"
-              />
-              <path
-                d="M16 28C22 28 26 23 26 17C26 11 21 7 16 4C19 8 19 14 16 18C13 22 9 24 6 28C10 28 13 28 16 28Z"
-                fill="#073746"
-                opacity="0.9"
-              />
-            </svg>
-          </div>
+          <img
+            src="/assets/logo.png"
+            alt="PaisaPilot AI Logo"
+            className="w-9 h-9 object-contain rounded-full shadow-subtle group-hover:scale-105 transition-transform"
+          />
           <span className="font-extrabold text-xl tracking-tight text-[#073746] group-hover:opacity-90 transition-opacity">
-            PaisaPilot <span className="text-[#073746] font-bold">AI</span>
+            RupeeWise <span className="text-[#073746] font-bold">AI</span>
           </span>
         </Link>
+
 
         {/* Desktop Navigation Links */}
         <nav className="hidden md:flex items-center gap-8 text-[14px] font-medium text-[#0B1D33]/80">

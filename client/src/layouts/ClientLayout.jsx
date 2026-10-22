@@ -1,16 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import Navbar from '../components/navigation/Navbar.jsx';
-import Sidebar from '../components/navigation/Sidebar.jsx';
+import DashboardSidebar from '../components/dashboard/DashboardSidebar.jsx';
+import DashboardHeader from '../components/dashboard/DashboardHeader.jsx';
 
 export const ClientLayout = () => {
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('dashboard');
+
   return (
-    <div className="min-h-screen bg-canvas flex flex-col">
-      <Navbar isAdminView={false} />
-      <div className="flex-1 flex overflow-hidden">
-        <Sidebar isAdminView={false} className="hidden md:flex" />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
-          <Outlet />
+    <div className="min-h-screen bg-[#F6F3EE] text-[#0B1D33] font-sans antialiased">
+      {/* Dark Teal Sidebar (Fixed Left on Desktop, Drawer on Mobile) */}
+      <DashboardSidebar
+        mobileOpen={mobileSidebarOpen}
+        setMobileOpen={setMobileSidebarOpen}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+      />
+
+      {/* Main Content Area */}
+      <div className="lg:pl-[240px] flex flex-col min-h-screen">
+        {/* Sticky/Fixed Dashboard Header */}
+        <DashboardHeader onOpenMobileSidebar={() => setMobileSidebarOpen(true)} />
+
+        {/* Dynamic Route Pages */}
+        <main className="flex-1 p-4 sm:p-6 lg:p-7 max-w-[1540px] w-full mx-auto">
+          <Outlet context={{ activeTab, setActiveTab }} />
         </main>
       </div>
     </div>
