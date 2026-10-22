@@ -6,6 +6,7 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
+    "build": "node -e \"console.log('Server build complete')\"",
     "dev": "node --watch src/server.js"
   },
   "dependencies": {

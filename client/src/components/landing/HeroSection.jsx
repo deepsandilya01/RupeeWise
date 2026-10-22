@@ -8,7 +8,7 @@ export const HeroSection = ({ onWatchDemo }) => {
   const navigate = useNavigate();
 
   return (
-    <section className="relative overflow-hidden pt-6 pb-16 lg:pt-10 lg:pb-24">
+    <section className="relative overflow-x-clip pt-12 pb-24 lg:pt-16 lg:pb-32">
       {/* Background Decorative Organic Shapes (matching screenshot top-right) */}
       <div className="absolute top-0 right-0 -z-10 w-[550px] h-[550px] pointer-events-none opacity-85">
         <svg viewBox="0 0 500 500" className="w-full h-full" fill="none">
@@ -98,15 +98,15 @@ export const HeroSection = ({ onWatchDemo }) => {
 
           {/* Right Column: Perspective Dashboard + Floating Phone Mockup */}
           <div className="lg:col-span-7 relative pt-8 lg:pt-0">
-            {/* Handwritten annotation 1: Plan Save Grow (Positioned above mockup with zero control collision) */}
-            <div className="hidden xl:block absolute -top-16 left-6 z-10 text-center pointer-events-none select-none">
-              <div className="font-handwriting text-2xl text-[#073746]/85 font-bold leading-none rotate-[-4deg]">
+            {/* Handwritten annotation 1: Plan Save Grow (Positioned above mockup without any top clipping) */}
+            <div className="hidden xl:block absolute -top-12 left-4 lg:left-8 z-30 text-center pointer-events-none select-none">
+              <div className="font-handwriting text-2xl text-[#073746]/90 font-bold leading-none rotate-[-4deg]">
                 Plan <br />
                 Save <br />
                 Grow
               </div>
               {/* Hand-drawn curved arrow pointing to dashboard */}
-              <svg className="w-12 h-10 mt-1 ml-6 text-[#073746]/70 stroke-current" viewBox="0 0 50 40" fill="none">
+              <svg className="w-12 h-10 mt-1 ml-6 text-[#073746]/75 stroke-current" viewBox="0 0 50 40" fill="none">
                 <path
                   d="M10,5 C20,12 30,22 38,32"
                   strokeWidth="2"
@@ -131,10 +131,10 @@ export const HeroSection = ({ onWatchDemo }) => {
               </div>
             </div>
 
-            {/* Handwritten annotation 2: Small Changes Big Futures. */}
-            <div className="hidden xl:block absolute -bottom-12 right-44 z-10 pointer-events-none select-none text-left">
+            {/* Handwritten annotation 2: Small Changes Big Futures. (Positioned cleanly below the card, never obscured) */}
+            <div className="hidden xl:block absolute -bottom-16 left-6 sm:left-12 lg:left-16 z-30 pointer-events-none select-none text-left">
               <div className="flex items-center gap-2">
-                <svg className="w-10 h-10 text-[#073746]/70 stroke-current transform rotate-[-20deg]" viewBox="0 0 50 40" fill="none">
+                <svg className="w-10 h-10 text-[#073746]/75 stroke-current transform rotate-[-20deg]" viewBox="0 0 50 40" fill="none">
                   <path
                     d="M10,32 C20,20 30,12 38,8"
                     strokeWidth="2"
@@ -147,7 +147,7 @@ export const HeroSection = ({ onWatchDemo }) => {
                     strokeLinejoin="round"
                   />
                 </svg>
-                <div className="font-handwriting text-2xl text-[#073746]/85 font-bold leading-tight rotate-[6deg]">
+                <div className="font-handwriting text-2xl text-[#073746]/90 font-bold leading-tight rotate-[6deg]">
                   Small <br />
                   Changes <br />
                   Big Futures.
