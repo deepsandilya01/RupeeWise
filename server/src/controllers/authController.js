@@ -132,6 +132,24 @@ export const authController = {
       return next(error);
     }
   },
+
+  /**
+   * Seed demonstration dataset on demand
+   * POST /api/auth/demo/seed
+   */
+  async seedDemoAccount(req, res, next) {
+    try {
+      const userId = req.user.id;
+      const result = await authService.seedDemoData(userId);
+      return res.status(200).json({
+        success: true,
+        message: 'Demonstration dataset successfully generated',
+        data: result,
+      });
+    } catch (error) {
+      return next(error);
+    }
+  },
 };
 
 export default authController;

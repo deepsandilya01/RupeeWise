@@ -42,4 +42,7 @@ router.get('/me', authenticate, authController.getCurrentUser);
 // POST /api/auth/logout - Clear session cookie
 router.post('/logout', authController.logout);
 
+// POST /api/auth/demo/seed - Explicitly populate or reset demo dataset
+router.post('/demo/seed', authenticate, authController.seedDemoAccount);
+
 export default router;

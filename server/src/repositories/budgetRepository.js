@@ -54,6 +54,15 @@ export const budgetRepository = {
     }
     return Budget.findOneAndDelete({ _id: id, userId }).exec();
   },
+
+  /**
+   * Delete multiple budgets matching filter
+   * @param {Object} filter
+   * @returns {Promise<Object>}
+   */
+  async deleteMany(filter) {
+    return Budget.deleteMany(filter).exec();
+  },
 };
 
 export default budgetRepository;

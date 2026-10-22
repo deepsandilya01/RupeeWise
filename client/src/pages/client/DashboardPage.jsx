@@ -1,7 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Sparkles } from 'lucide-react';
 import useAuth from '../../hooks/useAuth.js';
+import useToast from '../../hooks/useToast.js';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.js';
 import { fetchTransactionSummary } from '../../features/transactions/transactionThunks.js';
+import authService from '../../services/authService.js';
 import MetricCardsRow from '../../components/dashboard/MetricCardsRow.jsx';
 import ExpenseOverviewCard from '../../components/dashboard/ExpenseOverviewCard.jsx';
 import IncomeExpensesCard from '../../components/dashboard/IncomeExpensesCard.jsx';
@@ -14,7 +17,9 @@ import FreedomBannerCard from '../../components/dashboard/FreedomBannerCard.jsx'
 
 export const DashboardPage = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
   const firstName = user?.name ? user.name.split(' ')[0] : 'Deep';
+  const [seeding, setSeeding] = useState(false);
 
   const dispatch = useAppDispatch();
   const { summary } = useAppSelector((state) => state.transactions);
@@ -22,6 +27,19 @@ export const DashboardPage = () => {
   useEffect(() => {
     dispatch(fetchTransactionSummary());
   }, [dispatch]);
+
+  const handleSeedDemoData = async () => {
+    try {
+      setSeeding(true);
+      await authService.seedDemoData();
+      toast.success('Sample dataset reloaded with 31 transactions!');
+      dispatch(fetchTransactionSummary());
+    } catch (err) {
+      toast.error('Unable to populate demo dataset');
+    } finally {
+      setSeeding(false);
+    }
+  };
 
   return (
     <div className="space-y-5 select-none">
@@ -35,9 +53,22 @@ export const DashboardPage = () => {
               <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0B1D33] tracking-tight">
                 Good Morning, {firstName} <span className="inline-block animate-wave">👋</span>
               </h1>
-              <p className="text-xs text-gray-500 font-medium mt-1">
-                Here's your live financial snapshot for October 2026
-              </p>
+              <div className="flex flex-wrap items-center gap-3 mt-1">
+                <p className="text-xs text-gray-500 font-medium">
+                  Here's your live financial snapshot for October 2026
+                </p>
+                {user?.isDemo && (
+                  <button
+                    type="button"
+                    onClick={handleSeedDemoData}
+                    disabled={seeding}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#FF624F]/10 hover:bg-[#FF624F]/20 text-[#D9381E] border border-[#FF624F]/30 transition-all active:scale-95 disabled:opacity-50"
+                  >
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>{seeding ? 'Populating...' : 'Reset Demo Dataset (31 Transactions)'}</span>
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* "Smarter Money Decisions for a Brighter You." Tagline with Peach Arc */}

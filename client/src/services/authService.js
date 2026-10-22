@@ -68,6 +68,14 @@ export const authService = {
   async checkHealth() {
     return apiClient.get('/health');
   },
+
+  /**
+   * Populate or reset demonstration dataset
+   * @returns {Promise<{ success: boolean, message: string, data: Object }>}
+   */
+  async seedDemoData() {
+    return apiClient.post('/auth/demo/seed');
+  },
 };
 
 export default authService;

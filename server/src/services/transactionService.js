@@ -1,5 +1,7 @@
 import transactionRepository from '../repositories/transactionRepository.js';
+import userRepository from '../repositories/userRepository.js';
 import activityLogRepository from '../repositories/activityLogRepository.js';
+import authService from './authService.js';
 
 export const transactionService = {
   /**
@@ -50,6 +52,14 @@ export const transactionService = {
       const err = new Error('Unauthorized: User ID is required');
       err.statusCode = 401;
       throw err;
+    }
+
+    const txCount = await transactionRepository.count({ userId });
+    if (txCount === 0) {
+      const user = await userRepository.findById(userId);
+      if (user && user.isDemo) {
+        await authService.seedDemoData(userId);
+      }
     }
 
     const result = await transactionRepository.findPaginated({
@@ -164,6 +174,14 @@ export const transactionService = {
       const err = new Error('Unauthorized: User ID is required');
       err.statusCode = 401;
       throw err;
+    }
+
+    const txCount = await transactionRepository.count({ userId });
+    if (txCount === 0) {
+      const user = await userRepository.findById(userId);
+      if (user && user.isDemo) {
+        await authService.seedDemoData(userId);
+      }
     }
 
     const summary = await transactionRepository.getSummary({ userId, month, year });

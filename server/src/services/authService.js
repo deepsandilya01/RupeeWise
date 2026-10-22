@@ -178,382 +178,10 @@ export const authService = {
       }
     }
 
-    // For client demo, ensure rich sample data is available for exploration
-    if (!isDemoAdmin) {
-      const transactionCount = await transactionRepository.count({ userId: user._id });
-      if (transactionCount < 20) {
-        // Clear any minimal/outdated demo transactions and goals for this demo user to seed a rich, vibrant dataset
-        await transactionRepository.deleteMany({ userId: user._id });
-        await goalRepository.deleteMany({ userId: user._id });
-
-        const now = new Date();
-        const currentYear = now.getFullYear();
-        const currentMonth = now.getMonth();
-        const prevMonth = currentMonth === 0 ? 11 : currentMonth - 1;
-        const prevYear = currentMonth === 0 ? currentYear - 1 : currentYear;
-
-        const demoTransactions = [
-          // Current Month - Incomes
-          {
-            userId: user._id,
-            title: 'Senior Software Engineering Salary',
-            amount: 85000,
-            type: 'income',
-            category: 'Salary & Income',
-            paymentMethod: 'Net Banking',
-            date: new Date(currentYear, currentMonth, 1, 9, 30),
-            notes: 'Monthly direct salary transfer from tech employer',
-          },
-          {
-            userId: user._id,
-            title: 'Freelance Fintech UI/UX Project',
-            amount: 25000,
-            type: 'income',
-            category: 'Salary & Income',
-            paymentMethod: 'UPI',
-            date: new Date(currentYear, currentMonth, 15, 14, 0),
-            notes: 'Milestone payment for design sprint deliverables',
-          },
-          // Current Month - Housing & Utilities
-          {
-            userId: user._id,
-            title: 'Modern Apartment 2BHK Rent',
-            amount: 22000,
-            type: 'expense',
-            category: 'Housing & Rent',
-            paymentMethod: 'Net Banking',
-            date: new Date(currentYear, currentMonth, 3, 10, 0),
-            notes: 'Monthly residential lease transfer',
-          },
-          {
-            userId: user._id,
-            title: 'High-Speed Fiber Broadband 300 Mbps',
-            amount: 1499,
-            type: 'expense',
-            category: 'Utilities',
-            paymentMethod: 'UPI',
-            date: new Date(currentYear, currentMonth, 5, 11, 15),
-            notes: 'Work from home internet connection',
-          },
-          {
-            userId: user._id,
-            title: 'BESCOM City Electricity Bill',
-            amount: 1850,
-            type: 'expense',
-            category: 'Utilities',
-            paymentMethod: 'Net Banking',
-            date: new Date(currentYear, currentMonth, 8, 16, 20),
-            notes: 'Monthly power utilities payment',
-          },
-          // Current Month - Food & Dining
-          {
-            userId: user._id,
-            title: 'Nature Basket Organic Groceries',
-            amount: 4850,
-            type: 'expense',
-            category: 'Food & Dining',
-            paymentMethod: 'UPI',
-            date: new Date(currentYear, currentMonth, 6, 18, 45),
-            notes: 'Weekly organic pantry & farm fresh vegetables',
-          },
-          {
-            userId: user._id,
-            title: 'Zomato Office Gourmet Lunch',
-            amount: 420,
-            type: 'expense',
-            category: 'Food & Dining',
-            paymentMethod: 'UPI',
-            date: new Date(currentYear, currentMonth, 9, 13, 15),
-            notes: 'Team lunch bowls',
-          },
-          {
-            userId: user._id,
-            title: 'Blue Tokai Specialty Coffee & Croissant',
-            amount: 380,
-            type: 'expense',
-            category: 'Food & Dining',
-            paymentMethod: 'UPI',
-            date: new Date(currentYear, currentMonth, 11, 10, 30),
-            notes: 'Morning espresso and bakery treat',
-          },
-          {
-            userId: user._id,
-            title: 'Swiggy Weekend Family Feast',
-            amount: 1290,
-            type: 'expense',
-            category: 'Food & Dining',
-            paymentMethod: 'Credit Card',
-            date: new Date(currentYear, currentMonth, 13, 20, 10),
-            notes: 'North Indian dinner order',
-          },
-          {
-            userId: user._id,
-            title: 'Blinkit 10-Min Quick Groceries',
-            amount: 620,
-            type: 'expense',
-            category: 'Food & Dining',
-            paymentMethod: 'UPI',
-            date: new Date(currentYear, currentMonth, 16, 17, 0),
-            notes: 'Milk, oats, snacks & essentials',
-          },
-          // Current Month - Shopping
-          {
-            userId: user._id,
-            title: 'Amazon India - Sony WH-1000XM5 Headphones',
-            amount: 3499,
-            type: 'expense',
-            category: 'Shopping',
-            paymentMethod: 'Credit Card',
-            date: new Date(currentYear, currentMonth, 7, 15, 30),
-            notes: 'Noise-canceling headphones for focus work',
-          },
-          {
-            userId: user._id,
-            title: 'Myntra Autumn Festive Wardrobe',
-            amount: 2450,
-            type: 'expense',
-            category: 'Shopping',
-            paymentMethod: 'UPI',
-            date: new Date(currentYear, currentMonth, 14, 19, 0),
-            notes: 'Casual cotton shirts and trousers',
-          },
-          // Current Month - Transportation
-          {
-            userId: user._id,
-            title: 'Uber Premier to Client Tech Park',
-            amount: 420,
-            type: 'expense',
-            category: 'Transportation',
-            paymentMethod: 'UPI',
-            date: new Date(currentYear, currentMonth, 4, 9, 0),
-            notes: 'Morning meeting transit',
-          },
-          {
-            userId: user._id,
-            title: 'Shell Petrol / Fuel Refill',
-            amount: 2100,
-            type: 'expense',
-            category: 'Transportation',
-            paymentMethod: 'Credit Card',
-            date: new Date(currentYear, currentMonth, 10, 18, 30),
-            notes: 'Full tank fuel for weekend getaway',
-          },
-          {
-            userId: user._id,
-            title: 'Namma Metro Smart Card Auto-Topup',
-            amount: 800,
-            type: 'expense',
-            category: 'Transportation',
-            paymentMethod: 'UPI',
-            date: new Date(currentYear, currentMonth, 17, 8, 45),
-            notes: 'Daily rapid transit commute recharge',
-          },
-          // Current Month - Health & Fitness
-          {
-            userId: user._id,
-            title: 'Cult.fit Elite Gym Membership Pass',
-            amount: 1800,
-            type: 'expense',
-            category: 'Health & Medical',
-            paymentMethod: 'Net Banking',
-            date: new Date(currentYear, currentMonth, 2, 7, 0),
-            notes: 'Monthly strength & conditioning access',
-          },
-          {
-            userId: user._id,
-            title: 'Apollo 24|7 Pharmacy Vitamins & Skincare',
-            amount: 680,
-            type: 'expense',
-            category: 'Health & Medical',
-            paymentMethod: 'UPI',
-            date: new Date(currentYear, currentMonth, 12, 16, 0),
-            notes: 'Daily multivitamins & Omega 3 supplements',
-          },
-          // Current Month - Subscriptions & Entertainment
-          {
-            userId: user._id,
-            title: 'Netflix 4K Ultra & Spotify Family Plan',
-            amount: 1199,
-            type: 'expense',
-            category: 'Subscriptions & Entertainment',
-            paymentMethod: 'Credit Card',
-            date: new Date(currentYear, currentMonth, 5, 12, 0),
-            notes: 'Monthly recurring entertainment subscriptions',
-          },
-          {
-            userId: user._id,
-            title: 'BookMyShow IMAX Weekend Movie Tickets',
-            amount: 840,
-            type: 'expense',
-            category: 'Subscriptions & Entertainment',
-            paymentMethod: 'UPI',
-            date: new Date(currentYear, currentMonth, 18, 21, 30),
-            notes: '2 tickets for blockbuster sci-fi release',
-          },
-          // Current Month - Investments & Wealth
-          {
-            userId: user._id,
-            title: 'Nifty 50 Index Mutual Fund SIP',
-            amount: 15000,
-            type: 'expense',
-            category: 'Investments & Savings',
-            paymentMethod: 'Net Banking',
-            date: new Date(currentYear, currentMonth, 10, 6, 0),
-            notes: 'Automated disciplined long-term compounding SIP',
-          },
-          {
-            userId: user._id,
-            title: 'Parag Parikh Flexi Cap Fund SIP',
-            amount: 7500,
-            type: 'expense',
-            category: 'Investments & Savings',
-            paymentMethod: 'Net Banking',
-            date: new Date(currentYear, currentMonth, 10, 6, 5),
-            notes: 'Diversified equity mutual fund accumulation',
-          },
-          {
-            userId: user._id,
-            title: 'Sovereign Digital Gold SGB Purchase',
-            amount: 5000,
-            type: 'expense',
-            category: 'Investments & Savings',
-            paymentMethod: 'Net Banking',
-            date: new Date(currentYear, currentMonth, 15, 11, 0),
-            notes: 'Gold hedge allocation via RBI tranche',
-          },
-          // Current Month - Education
-          {
-            userId: user._id,
-            title: 'Coursera Generative AI Professional Certificate',
-            amount: 2999,
-            type: 'expense',
-            category: 'Education',
-            paymentMethod: 'Credit Card',
-            date: new Date(currentYear, currentMonth, 14, 15, 0),
-            notes: 'Continuous professional learning course',
-          },
-
-          // Previous Month - For historical MoM comparison and AI analysis
-          {
-            userId: user._id,
-            title: 'Monthly Tech Salary (Previous Month)',
-            amount: 85000,
-            type: 'income',
-            category: 'Salary & Income',
-            paymentMethod: 'Net Banking',
-            date: new Date(prevYear, prevMonth, 1, 9, 30),
-            notes: 'September direct bank deposit',
-          },
-          {
-            userId: user._id,
-            title: 'Apartment Rent (Previous Month)',
-            amount: 22000,
-            type: 'expense',
-            category: 'Housing & Rent',
-            paymentMethod: 'Net Banking',
-            date: new Date(prevYear, prevMonth, 3, 10, 0),
-            notes: 'September residential lease',
-          },
-          {
-            userId: user._id,
-            title: 'Supermarket Groceries & Provisions',
-            amount: 5100,
-            type: 'expense',
-            category: 'Food & Dining',
-            paymentMethod: 'UPI',
-            date: new Date(prevYear, prevMonth, 7, 18, 0),
-            notes: 'Monthly staples & provisions',
-          },
-          {
-            userId: user._id,
-            title: 'Casual Dinners & Weekend Cafes',
-            amount: 2800,
-            type: 'expense',
-            category: 'Food & Dining',
-            paymentMethod: 'Credit Card',
-            date: new Date(prevYear, prevMonth, 15, 20, 0),
-            notes: 'Social dining and takeout',
-          },
-          {
-            userId: user._id,
-            title: 'Flipkart Big Billion Days Electronic Gadget',
-            amount: 4800,
-            type: 'expense',
-            category: 'Shopping',
-            paymentMethod: 'Credit Card',
-            date: new Date(prevYear, prevMonth, 22, 14, 30),
-            notes: 'Ergonomic mouse and desk mat',
-          },
-          {
-            userId: user._id,
-            title: 'City Cabs & Metro Travel Pass',
-            amount: 2400,
-            type: 'expense',
-            category: 'Transportation',
-            paymentMethod: 'UPI',
-            date: new Date(prevYear, prevMonth, 16, 9, 0),
-            notes: 'Monthly transportation commute',
-          },
-          {
-            userId: user._id,
-            title: 'Automated Mutual Fund SIP Transfers',
-            amount: 22500,
-            type: 'expense',
-            category: 'Investments & Savings',
-            paymentMethod: 'Net Banking',
-            date: new Date(prevYear, prevMonth, 10, 6, 0),
-            notes: 'Monthly recurring wealth SIP',
-          },
-          {
-            userId: user._id,
-            title: 'Utility Invoices (Power & Internet)',
-            amount: 3150,
-            type: 'expense',
-            category: 'Utilities',
-            paymentMethod: 'UPI',
-            date: new Date(prevYear, prevMonth, 8, 11, 0),
-            notes: 'Electricity and fiber connectivity bills',
-          },
-        ];
-
-        await transactionRepository.createMany(demoTransactions);
-
-        // Seed Budgets with realistic limits & thresholds
-        await budgetRepository.upsert(user._id.toString(), 'Food & Dining', 12000, 80);
-        await budgetRepository.upsert(user._id.toString(), 'Housing & Rent', 25000, 90);
-        await budgetRepository.upsert(user._id.toString(), 'Shopping', 8000, 80);
-        await budgetRepository.upsert(user._id.toString(), 'Investments & Savings', 30000, 75);
-        await budgetRepository.upsert(user._id.toString(), 'Subscriptions & Entertainment', 3000, 70);
-
-        // Seed Goals with meaningful financial milestones
-        await goalRepository.create({
-          userId: user._id,
-          name: 'Emergency Reserve Fund (6 Months)',
-          targetAmount: 200000,
-          currentAmount: 135000,
-          monthlyContribution: 10000,
-          targetDate: new Date(currentYear + 1, currentMonth, 1),
-          category: 'Emergency Fund',
-        });
-        await goalRepository.create({
-          userId: user._id,
-          name: 'MacBook Air M5 Workstation',
-          targetAmount: 115000,
-          currentAmount: 76000,
-          monthlyContribution: 8000,
-          targetDate: new Date(currentYear, currentMonth + 4, 1),
-          category: 'Technology',
-        });
-        await goalRepository.create({
-          userId: user._id,
-          name: 'Europe Holiday Trip 2027',
-          targetAmount: 250000,
-          currentAmount: 85000,
-          monthlyContribution: 12000,
-          targetDate: new Date(currentYear + 1, currentMonth + 6, 1),
-          category: 'Travel',
-        });
-      }
+    // Ensure all demonstration accounts have rich data available for dashboard exploration
+    const transactionCount = await transactionRepository.count({ userId: user._id });
+    if (transactionCount < 20) {
+      await authService.seedDemoData(user._id);
     }
 
     const token = generateToken({
@@ -572,6 +200,394 @@ export const authService = {
     return {
       user: user.toSafeObject(),
       token,
+    };
+  },
+
+  /**
+   * Seed demonstration dataset (31 transactions, 5 budgets, 3 goals) for a given user
+   * @param {string|Object} targetUserId
+   * @returns {Promise<{ transactionsCount: number, budgetsCount: number, goalsCount: number }>}
+   */
+  async seedDemoData(targetUserId) {
+    const userId = typeof targetUserId === 'string' ? targetUserId : targetUserId.toString();
+
+    // Clear any minimal/outdated demo transactions, goals, and budgets
+    await transactionRepository.deleteMany({ userId });
+    await goalRepository.deleteMany({ userId });
+    await budgetRepository.deleteMany({ userId });
+
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+    const prevMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+    const prevYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+
+    const demoTransactions = [
+      // Current Month - Incomes
+          {
+            userId,
+            title: 'Senior Software Engineering Salary',
+            amount: 85000,
+            type: 'income',
+            category: 'Salary & Income',
+            paymentMethod: 'Net Banking',
+            date: new Date(currentYear, currentMonth, 1, 9, 30),
+            notes: 'Monthly direct salary transfer from tech employer',
+          },
+          {
+            userId,
+            title: 'Freelance Fintech UI/UX Project',
+            amount: 25000,
+            type: 'income',
+            category: 'Salary & Income',
+            paymentMethod: 'UPI',
+            date: new Date(currentYear, currentMonth, 15, 14, 0),
+            notes: 'Milestone payment for design sprint deliverables',
+          },
+          // Current Month - Housing & Utilities
+          {
+            userId,
+            title: 'Modern Apartment 2BHK Rent',
+            amount: 22000,
+            type: 'expense',
+            category: 'Housing & Rent',
+            paymentMethod: 'Net Banking',
+            date: new Date(currentYear, currentMonth, 3, 10, 0),
+            notes: 'Monthly residential lease transfer',
+          },
+          {
+            userId,
+            title: 'High-Speed Fiber Broadband 300 Mbps',
+            amount: 1499,
+            type: 'expense',
+            category: 'Utilities',
+            paymentMethod: 'UPI',
+            date: new Date(currentYear, currentMonth, 5, 11, 15),
+            notes: 'Work from home internet connection',
+          },
+          {
+            userId,
+            title: 'BESCOM City Electricity Bill',
+            amount: 1850,
+            type: 'expense',
+            category: 'Utilities',
+            paymentMethod: 'Net Banking',
+            date: new Date(currentYear, currentMonth, 8, 16, 20),
+            notes: 'Monthly power utilities payment',
+          },
+          // Current Month - Food & Dining
+          {
+            userId,
+            title: 'Nature Basket Organic Groceries',
+            amount: 4850,
+            type: 'expense',
+            category: 'Food & Dining',
+            paymentMethod: 'UPI',
+            date: new Date(currentYear, currentMonth, 6, 18, 45),
+            notes: 'Weekly organic pantry & farm fresh vegetables',
+          },
+          {
+            userId,
+            title: 'Zomato Office Gourmet Lunch',
+            amount: 420,
+            type: 'expense',
+            category: 'Food & Dining',
+            paymentMethod: 'UPI',
+            date: new Date(currentYear, currentMonth, 9, 13, 15),
+            notes: 'Team lunch bowls',
+          },
+          {
+            userId,
+            title: 'Blue Tokai Specialty Coffee & Croissant',
+            amount: 380,
+            type: 'expense',
+            category: 'Food & Dining',
+            paymentMethod: 'UPI',
+            date: new Date(currentYear, currentMonth, 11, 10, 30),
+            notes: 'Morning espresso and bakery treat',
+          },
+          {
+            userId,
+            title: 'Swiggy Weekend Family Feast',
+            amount: 1290,
+            type: 'expense',
+            category: 'Food & Dining',
+            paymentMethod: 'Credit Card',
+            date: new Date(currentYear, currentMonth, 13, 20, 10),
+            notes: 'North Indian dinner order',
+          },
+          {
+            userId,
+            title: 'Blinkit 10-Min Quick Groceries',
+            amount: 620,
+            type: 'expense',
+            category: 'Food & Dining',
+            paymentMethod: 'UPI',
+            date: new Date(currentYear, currentMonth, 16, 17, 0),
+            notes: 'Milk, oats, snacks & essentials',
+          },
+          // Current Month - Shopping
+          {
+            userId,
+            title: 'Amazon India - Sony WH-1000XM5 Headphones',
+            amount: 3499,
+            type: 'expense',
+            category: 'Shopping',
+            paymentMethod: 'Credit Card',
+            date: new Date(currentYear, currentMonth, 7, 15, 30),
+            notes: 'Noise-canceling headphones for focus work',
+          },
+          {
+            userId,
+            title: 'Myntra Autumn Festive Wardrobe',
+            amount: 2450,
+            type: 'expense',
+            category: 'Shopping',
+            paymentMethod: 'UPI',
+            date: new Date(currentYear, currentMonth, 14, 19, 0),
+            notes: 'Casual cotton shirts and trousers',
+          },
+          // Current Month - Transportation
+          {
+            userId,
+            title: 'Uber Premier to Client Tech Park',
+            amount: 420,
+            type: 'expense',
+            category: 'Transportation',
+            paymentMethod: 'UPI',
+            date: new Date(currentYear, currentMonth, 4, 9, 0),
+            notes: 'Morning meeting transit',
+          },
+          {
+            userId,
+            title: 'Shell Petrol / Fuel Refill',
+            amount: 2100,
+            type: 'expense',
+            category: 'Transportation',
+            paymentMethod: 'Credit Card',
+            date: new Date(currentYear, currentMonth, 10, 18, 30),
+            notes: 'Full tank fuel for weekend getaway',
+          },
+          {
+            userId,
+            title: 'Namma Metro Smart Card Auto-Topup',
+            amount: 800,
+            type: 'expense',
+            category: 'Transportation',
+            paymentMethod: 'UPI',
+            date: new Date(currentYear, currentMonth, 17, 8, 45),
+            notes: 'Daily rapid transit commute recharge',
+          },
+          // Current Month - Health & Fitness
+          {
+            userId,
+            title: 'Cult.fit Elite Gym Membership Pass',
+            amount: 1800,
+            type: 'expense',
+            category: 'Health & Medical',
+            paymentMethod: 'Net Banking',
+            date: new Date(currentYear, currentMonth, 2, 7, 0),
+            notes: 'Monthly strength & conditioning access',
+          },
+          {
+            userId,
+            title: 'Apollo 24|7 Pharmacy Vitamins & Skincare',
+            amount: 680,
+            type: 'expense',
+            category: 'Health & Medical',
+            paymentMethod: 'UPI',
+            date: new Date(currentYear, currentMonth, 12, 16, 0),
+            notes: 'Daily multivitamins & Omega 3 supplements',
+          },
+          // Current Month - Subscriptions & Entertainment
+          {
+            userId,
+            title: 'Netflix 4K Ultra & Spotify Family Plan',
+            amount: 1199,
+            type: 'expense',
+            category: 'Subscriptions & Entertainment',
+            paymentMethod: 'Credit Card',
+            date: new Date(currentYear, currentMonth, 5, 12, 0),
+            notes: 'Monthly recurring entertainment subscriptions',
+          },
+          {
+            userId,
+            title: 'BookMyShow IMAX Weekend Movie Tickets',
+            amount: 840,
+            type: 'expense',
+            category: 'Subscriptions & Entertainment',
+            paymentMethod: 'UPI',
+            date: new Date(currentYear, currentMonth, 18, 21, 30),
+            notes: '2 tickets for blockbuster sci-fi release',
+          },
+          // Current Month - Investments & Wealth
+          {
+            userId,
+            title: 'Nifty 50 Index Mutual Fund SIP',
+            amount: 15000,
+            type: 'expense',
+            category: 'Investments & Savings',
+            paymentMethod: 'Net Banking',
+            date: new Date(currentYear, currentMonth, 10, 6, 0),
+            notes: 'Automated disciplined long-term compounding SIP',
+          },
+          {
+            userId,
+            title: 'Parag Parikh Flexi Cap Fund SIP',
+            amount: 7500,
+            type: 'expense',
+            category: 'Investments & Savings',
+            paymentMethod: 'Net Banking',
+            date: new Date(currentYear, currentMonth, 10, 6, 5),
+            notes: 'Diversified equity mutual fund accumulation',
+          },
+          {
+            userId,
+            title: 'Sovereign Digital Gold SGB Purchase',
+            amount: 5000,
+            type: 'expense',
+            category: 'Investments & Savings',
+            paymentMethod: 'Net Banking',
+            date: new Date(currentYear, currentMonth, 15, 11, 0),
+            notes: 'Gold hedge allocation via RBI tranche',
+          },
+          // Current Month - Education
+          {
+            userId,
+            title: 'Coursera Generative AI Professional Certificate',
+            amount: 2999,
+            type: 'expense',
+            category: 'Education',
+            paymentMethod: 'Credit Card',
+            date: new Date(currentYear, currentMonth, 14, 15, 0),
+            notes: 'Continuous professional learning course',
+          },
+
+          // Previous Month - For historical MoM comparison and AI analysis
+          {
+            userId,
+            title: 'Monthly Tech Salary (Previous Month)',
+            amount: 85000,
+            type: 'income',
+            category: 'Salary & Income',
+            paymentMethod: 'Net Banking',
+            date: new Date(prevYear, prevMonth, 1, 9, 30),
+            notes: 'September direct bank deposit',
+          },
+          {
+            userId,
+            title: 'Apartment Rent (Previous Month)',
+            amount: 22000,
+            type: 'expense',
+            category: 'Housing & Rent',
+            paymentMethod: 'Net Banking',
+            date: new Date(prevYear, prevMonth, 3, 10, 0),
+            notes: 'September residential lease',
+          },
+          {
+            userId,
+            title: 'Supermarket Groceries & Provisions',
+            amount: 5100,
+            type: 'expense',
+            category: 'Food & Dining',
+            paymentMethod: 'UPI',
+            date: new Date(prevYear, prevMonth, 7, 18, 0),
+            notes: 'Monthly staples & provisions',
+          },
+          {
+            userId,
+            title: 'Casual Dinners & Weekend Cafes',
+            amount: 2800,
+            type: 'expense',
+            category: 'Food & Dining',
+            paymentMethod: 'Credit Card',
+            date: new Date(prevYear, prevMonth, 15, 20, 0),
+            notes: 'Social dining and takeout',
+          },
+          {
+            userId,
+            title: 'Flipkart Big Billion Days Electronic Gadget',
+            amount: 4800,
+            type: 'expense',
+            category: 'Shopping',
+            paymentMethod: 'Credit Card',
+            date: new Date(prevYear, prevMonth, 22, 14, 30),
+            notes: 'Ergonomic mouse and desk mat',
+          },
+          {
+            userId,
+            title: 'City Cabs & Metro Travel Pass',
+            amount: 2400,
+            type: 'expense',
+            category: 'Transportation',
+            paymentMethod: 'UPI',
+            date: new Date(prevYear, prevMonth, 16, 9, 0),
+            notes: 'Monthly transportation commute',
+          },
+          {
+            userId,
+            title: 'Automated Mutual Fund SIP Transfers',
+            amount: 22500,
+            type: 'expense',
+            category: 'Investments & Savings',
+            paymentMethod: 'Net Banking',
+            date: new Date(prevYear, prevMonth, 10, 6, 0),
+            notes: 'Monthly recurring wealth SIP',
+          },
+          {
+            userId,
+            title: 'Utility Invoices (Power & Internet)',
+            amount: 3150,
+            type: 'expense',
+            category: 'Utilities',
+            paymentMethod: 'UPI',
+            date: new Date(prevYear, prevMonth, 8, 11, 0),
+            notes: 'Electricity and fiber connectivity bills',
+          },
+        ];
+
+        await transactionRepository.createMany(demoTransactions);
+
+    // Seed Budgets with realistic limits & thresholds
+    await budgetRepository.upsert(userId, 'Food & Dining', 12000, 80);
+    await budgetRepository.upsert(userId, 'Housing & Rent', 25000, 90);
+    await budgetRepository.upsert(userId, 'Shopping', 8000, 80);
+    await budgetRepository.upsert(userId, 'Investments & Savings', 30000, 75);
+    await budgetRepository.upsert(userId, 'Subscriptions & Entertainment', 3000, 70);
+
+    // Seed Goals with meaningful financial milestones
+    await goalRepository.create({
+      userId,
+      name: 'Emergency Reserve Fund (6 Months)',
+      targetAmount: 200000,
+      currentAmount: 135000,
+      monthlyContribution: 10000,
+      targetDate: new Date(currentYear + 1, currentMonth, 1),
+      category: 'Emergency Fund',
+    });
+    await goalRepository.create({
+      userId,
+      name: 'MacBook Air M5 Workstation',
+      targetAmount: 115000,
+      currentAmount: 76000,
+      monthlyContribution: 8000,
+      targetDate: new Date(currentYear, currentMonth + 4, 1),
+      category: 'Technology',
+    });
+    await goalRepository.create({
+      userId,
+      name: 'Europe Holiday Trip 2027',
+      targetAmount: 250000,
+      currentAmount: 85000,
+      monthlyContribution: 12000,
+      targetDate: new Date(currentYear + 1, currentMonth + 6, 1),
+      category: 'Travel',
+    });
+
+    return {
+      transactionsCount: demoTransactions.length,
+      budgetsCount: 5,
+      goalsCount: 3,
     };
   },
   /**
@@ -734,6 +750,14 @@ export const authService = {
     if (user.role !== expectedRole) {
       const updatedUser = await userRepository.updateById(user._id, { role: expectedRole });
       return updatedUser.toSafeObject();
+    }
+
+    // Auto-seed for any demo account that has 0 or fewer than 20 transactions
+    if (user.isDemo) {
+      const txCount = await transactionRepository.count({ userId: user._id });
+      if (txCount < 20) {
+        await authService.seedDemoData(user._id);
+      }
     }
 
     return user.toSafeObject();
