@@ -1,14 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck, Heart, ArrowUpRight, Lock, CheckCircle2 } from 'lucide-react';
 
 export const LandingFooter = () => {
+  const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
 
   const scrollToSection = (id) => {
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      navigate(`/#${id}`);
     }
   };
 
@@ -77,23 +80,33 @@ export const LandingFooter = () => {
                   Plans &amp; Pricing
                 </button>
               </li>
-            </ul>
-          </div>
-
-          {/* Col 4: Intelligent Features */}
-          <div className="space-y-3">
-            <h4 className="text-xs font-extrabold uppercase tracking-wider text-[#073746]">
-              Features
-            </h4>
-            <ul className="space-y-2 text-gray-600 font-medium">
               <li>
                 <Link to="/ai-coach?tab=coach" className="hover:text-[#073746] transition-colors">
                   AI Money Coach
                 </Link>
               </li>
+            </ul>
+          </div>
+
+          {/* Col 4: Resources */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-extrabold uppercase tracking-wider text-[#073746]">
+              Resources
+            </h4>
+            <ul className="space-y-2 text-gray-600 font-medium">
               <li>
-                <Link to="/transactions" className="hover:text-[#073746] transition-colors">
-                  Transaction Ledger
+                <Link to="/blog" className="hover:text-[#073746] transition-colors">
+                  Financial Literacy Blog
+                </Link>
+              </li>
+              <li>
+                <Link to="/calculators" className="hover:text-[#073746] transition-colors">
+                  SIP &amp; Budget Calculators
+                </Link>
+              </li>
+              <li>
+                <Link to="/community" className="hover:text-[#073746] transition-colors">
+                  Student Money Community
                 </Link>
               </li>
               <li>
@@ -104,11 +117,6 @@ export const LandingFooter = () => {
               <li>
                 <Link to="/ai-coach?tab=budgets" className="hover:text-[#073746] transition-colors">
                   Smart Budgets &amp; Radar
-                </Link>
-              </li>
-              <li>
-                <Link to="/ai-coach?tab=goals" className="hover:text-[#073746] transition-colors">
-                  Savings Goals
                 </Link>
               </li>
             </ul>

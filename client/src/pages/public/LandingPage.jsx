@@ -1,15 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import LandingNavbar from '../../components/landing/LandingNavbar.jsx';
 import HeroSection from '../../components/landing/HeroSection.jsx';
 import FeatureStrip from '../../components/landing/FeatureStrip.jsx';
 import ProductShowcase from '../../components/landing/ProductShowcase.jsx';
+import HowItWorksSection from '../../components/landing/HowItWorksSection.jsx';
+import PricingSection from '../../components/landing/PricingSection.jsx';
 import StatisticsStrip from '../../components/landing/StatisticsStrip.jsx';
 import DemoModal from '../../components/landing/DemoModal.jsx';
 import LandingFooter from '../../components/landing/LandingFooter.jsx';
-import { Link } from 'react-router-dom';
 
 export const LandingPage = () => {
   const [demoOpen, setDemoOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash) {
+      const targetId = location.hash.replace('#', '');
+      const element = document.getElementById(targetId);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
+    }
+  }, [location]);
 
   return (
     <div className="min-h-screen bg-[#FAF6EE] text-[#0B1D33] font-sans antialiased relative selection:bg-coral-100 selection:text-coral-600">
@@ -40,7 +55,13 @@ export const LandingPage = () => {
         {/* 3. Product Showcase (Laptop on desk visual + Benefit Grid + Explore Features) */}
         <ProductShowcase />
 
-        {/* 4. Statistics Strip (10K+ Users, ₹2Cr+ Tracked, 4.8/5, 25% Increase) */}
+        {/* 4. How It Works - 4-step Action Flow */}
+        <HowItWorksSection />
+
+        {/* 5. Pricing Plans with Student & Pro tiers */}
+        <PricingSection />
+
+        {/* 6. Statistics Strip (10K+ Users, ₹2Cr+ Tracked, 4.8/5, 25% Increase) */}
         <StatisticsStrip />
       </main>
 
@@ -54,3 +75,4 @@ export const LandingPage = () => {
 };
 
 export default LandingPage;
+

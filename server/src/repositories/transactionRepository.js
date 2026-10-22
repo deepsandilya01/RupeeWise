@@ -22,6 +22,15 @@ export const transactionRepository = {
   },
 
   /**
+   * Delete transactions matching a filter
+   * @param {Object} filter
+   * @returns {Promise<Object>}
+   */
+  async deleteMany(filter = {}) {
+    return Transaction.deleteMany(filter).exec();
+  },
+
+  /**
    * Count transactions matching a filter
    * @param {Object} filter
    * @returns {Promise<number>}

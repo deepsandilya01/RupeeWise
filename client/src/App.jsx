@@ -20,6 +20,9 @@ import NotFoundPage from './pages/NotFoundPage.jsx';
 import LandingPage from './pages/public/LandingPage.jsx';
 import PrivacyPage from './pages/public/PrivacyPage.jsx';
 import TermsPage from './pages/public/TermsPage.jsx';
+import BlogPage from './pages/public/BlogPage.jsx';
+import CalculatorsPage from './pages/public/CalculatorsPage.jsx';
+import CommunityPage from './pages/public/CommunityPage.jsx';
 
 export const App = () => {
   const dispatch = useAppDispatch();
@@ -33,6 +36,9 @@ export const App = () => {
     <Routes>
       {/* Public Landing Page & Legal */}
       <Route path="/" element={<LandingPage />} />
+      <Route path="/blog" element={<BlogPage />} />
+      <Route path="/calculators" element={<CalculatorsPage />} />
+      <Route path="/community" element={<CommunityPage />} />
       <Route path="/privacy" element={<PrivacyPage />} />
       <Route path="/terms" element={<TermsPage />} />
 

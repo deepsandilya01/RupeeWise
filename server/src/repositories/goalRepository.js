@@ -91,6 +91,15 @@ export const goalRepository = {
   },
 
   /**
+   * Delete multiple goals matching a filter
+   * @param {Object} filter
+   * @returns {Promise<Object>}
+   */
+  async deleteMany(filter = {}) {
+    return Goal.deleteMany(filter).exec();
+  },
+
+  /**
    * Count goals by user
    * @param {string} userId
    * @returns {Promise<number>}

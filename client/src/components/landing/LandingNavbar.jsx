@@ -14,6 +14,8 @@ export const LandingNavbar = () => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      navigate(`/#${id}`);
     }
   };
 
@@ -92,30 +94,30 @@ export const LandingNavbar = () => {
 
             {resourcesOpen && (
               <div
-                className="absolute top-full left-0 mt-2 w-48 bg-[#FFFCF8] rounded-2xl shadow-elevated border border-gray-200/60 p-2 z-50 text-xs text-[#0B1D33]"
+                className="absolute top-full left-0 mt-2 w-52 bg-[#FFFCF8] rounded-2xl shadow-elevated border border-gray-200/60 p-2 z-50 text-xs text-[#0B1D33]"
                 onMouseLeave={() => setResourcesOpen(false)}
               >
-                <a
-                  href="#blog"
+                <Link
+                  to="/blog"
                   onClick={() => setResourcesOpen(false)}
-                  className="block px-3 py-2 rounded-xl hover:bg-peach-100/60 transition-colors"
+                  className="block px-3 py-2 rounded-xl hover:bg-peach-100/60 transition-colors font-medium text-[#073746]"
                 >
                   Financial Literacy Blog
-                </a>
-                <a
-                  href="#calculators"
+                </Link>
+                <Link
+                  to="/calculators"
                   onClick={() => setResourcesOpen(false)}
-                  className="block px-3 py-2 rounded-xl hover:bg-peach-100/60 transition-colors"
+                  className="block px-3 py-2 rounded-xl hover:bg-peach-100/60 transition-colors font-medium text-[#073746]"
                 >
                   SIP &amp; Budget Calculators
-                </a>
-                <a
-                  href="#community"
+                </Link>
+                <Link
+                  to="/community"
                   onClick={() => setResourcesOpen(false)}
-                  className="block px-3 py-2 rounded-xl hover:bg-peach-100/60 transition-colors"
+                  className="block px-3 py-2 rounded-xl hover:bg-peach-100/60 transition-colors font-medium text-[#073746]"
                 >
                   Student Money Community
-                </a>
+                </Link>
               </div>
             )}
           </div>
@@ -177,6 +179,30 @@ export const LandingNavbar = () => {
             >
               Pricing
             </button>
+            <div className="pt-2 border-t border-gray-200/60 flex flex-col space-y-1.5">
+              <span className="text-[11px] uppercase tracking-wider font-bold text-gray-500 py-1">Resources</span>
+              <Link
+                to="/blog"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-left py-1 text-[#073746] font-medium"
+              >
+                Financial Literacy Blog
+              </Link>
+              <Link
+                to="/calculators"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-left py-1 text-[#073746] font-medium"
+              >
+                SIP &amp; Budget Calculators
+              </Link>
+              <Link
+                to="/community"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-left py-1 text-[#073746] font-medium"
+              >
+                Student Money Community
+              </Link>
+            </div>
           </nav>
 
           <div className="pt-4 border-t border-gray-200 flex flex-col gap-3">
