@@ -1,9 +1,15 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 
 export const FreedomBannerCard = () => {
+  const navigate = useNavigate();
+
   return (
-    <div className="relative overflow-hidden bg-[#0C2B35] rounded-[22px] p-6 shadow-[0_6px_20px_rgba(12,43,53,0.25)] flex flex-col justify-between text-left select-none min-h-[140px] group cursor-pointer">
+    <div
+      onClick={() => navigate('/ai-coach')}
+      className="relative overflow-hidden bg-[#0C2B35] rounded-[22px] p-6 shadow-[0_6px_20px_rgba(12,43,53,0.25)] flex flex-col justify-between text-left select-none min-h-[140px] group cursor-pointer"
+    >
       {/* Background Organic Art Waves */}
       <div className="absolute inset-0 pointer-events-none">
         <svg

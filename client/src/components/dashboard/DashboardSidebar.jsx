@@ -21,11 +21,11 @@ export const DashboardSidebar = ({ mobileOpen, setMobileOpen, activeTab, setActi
   const mainNav = [
     { id: 'dashboard', path: '/dashboard', name: 'Dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
     { id: 'transactions', path: '/transactions', name: 'Transactions', icon: <Receipt className="w-4 h-4" /> },
-    { id: 'ai-coach', path: '/dashboard', name: 'AI Coach', icon: <Bot className="w-4 h-4" /> },
-    { id: 'budget', path: '/dashboard', name: 'Budget', icon: <PieChart className="w-4 h-4" /> },
-    { id: 'goals', path: '/dashboard', name: 'Goals', icon: <Target className="w-4 h-4" /> },
-    { id: 'simulator', path: '/dashboard', name: 'Simulator', icon: <Activity className="w-4 h-4" /> },
-    { id: 'insights', path: '/dashboard', name: 'Insights', icon: <Compass className="w-4 h-4" /> },
+    { id: 'ai-coach', path: '/ai-coach', name: 'AI Coach', icon: <Bot className="w-4 h-4" /> },
+    { id: 'budget', path: '/ai-coach', name: 'Budget', icon: <PieChart className="w-4 h-4" /> },
+    { id: 'goals', path: '/ai-coach', name: 'Goals', icon: <Target className="w-4 h-4" /> },
+    { id: 'simulator', path: '/ai-coach', name: 'Simulator', icon: <Activity className="w-4 h-4" /> },
+    { id: 'insights', path: '/ai-coach', name: 'Insights', icon: <Compass className="w-4 h-4" /> },
   ];
 
   const secondaryNav = [
@@ -86,11 +86,9 @@ export const DashboardSidebar = ({ mobileOpen, setMobileOpen, activeTab, setActi
           {/* Primary Navigation */}
           <nav className="space-y-1 text-xs font-semibold">
             {mainNav.map((item) => {
-              const isRouteActive = item.id === 'transactions'
-                ? location.pathname === '/transactions'
-                : item.id === 'dashboard'
-                ? location.pathname === '/dashboard'
-                : activeTab === item.id;
+              const isRouteActive = item.path && item.path !== '/dashboard'
+                ? location.pathname === item.path
+                : location.pathname === '/dashboard' && (activeTab === item.id || (!activeTab && item.id === 'dashboard'));
 
               return (
                 <button
@@ -152,7 +150,10 @@ export const DashboardSidebar = ({ mobileOpen, setMobileOpen, activeTab, setActi
               Big Futures.
             </div>
             <button
-              onClick={() => setActiveTab('simulator')}
+              onClick={() => {
+                navigate('/ai-coach');
+                setMobileOpen(false);
+              }}
               className="w-8 h-8 rounded-full bg-[#FFE5D4] text-[#0C2B35] flex items-center justify-center hover:bg-white transition-colors shadow-sm"
               aria-label="Explore simulator"
             >
