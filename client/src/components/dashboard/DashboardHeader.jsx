@@ -1,33 +1,71 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Bell, Calendar, ChevronDown, LogOut, Shield, Menu, Settings, HelpCircle } from 'lucide-react';
+import {
+  Search,
+  Bell,
+  Calendar,
+  ChevronDown,
+  LogOut,
+  Shield,
+  Menu,
+  Settings,
+  HelpCircle,
+  AlertTriangle,
+  Sparkles,
+  Target,
+  PieChart,
+  Check,
+  ArrowRight,
+  CheckCheck,
+} from 'lucide-react';
 import useAuth from '../../hooks/useAuth.js';
+import useNotifications from '../../hooks/useNotifications.js';
+import useToast from '../../hooks/useToast.js';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks.js';
 import { fetchTransactionSummary } from '../../features/transactions/transactionThunks.js';
 
 export const DashboardHeader = ({ onOpenMobileSidebar }) => {
   const { user, role, isAdmin, logout } = useAuth();
+  const { toast } = useToast();
+  const { notifications, unreadCount, markAsRead, markAllAsRead, isRead } = useNotifications();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [profileOpen, setProfileOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [dateMenuOpen, setDateMenuOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState('October 2026');
   const [searchTerm, setSearchTerm] = useState('');
   const profileRef = useRef(null);
+  const notificationsRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (profileRef.current && !profileRef.current.contains(e.target)) {
         setProfileOpen(false);
       }
+      if (notificationsRef.current && !notificationsRef.current.contains(e.target)) {
+        setNotificationsOpen(false);
+      }
+    };
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setProfileOpen(false);
+        setNotificationsOpen(false);
+        setDateMenuOpen(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   const handleLogout = async () => {
     setProfileOpen(false);
     await logout();
+    toast.info('You have been signed out.');
     navigate('/login');
   };
 
@@ -48,6 +86,14 @@ export const DashboardHeader = ({ onOpenMobileSidebar }) => {
     };
     const params = monthMap[m] || { month: 10, year: 2026 };
     dispatch(fetchTransactionSummary(params));
+  };
+
+  const handleNotificationClick = (item) => {
+    markAsRead(item.id);
+    setNotificationsOpen(false);
+    if (item.actionUrl) {
+      navigate(item.actionUrl);
+    }
   };
 
   const displayName = user?.name || 'Deep Sandilya';
@@ -79,15 +125,115 @@ export const DashboardHeader = ({ onOpenMobileSidebar }) => {
 
       {/* Right Controls */}
       <div className="flex items-center gap-3 sm:gap-4">
-        {/* Notification Bell */}
-        <button
-          onClick={() => navigate('/notifications')}
-          className="relative p-2 rounded-full bg-white border border-gray-200/80 hover:bg-gray-50 cursor-pointer shadow-2xs transition-colors"
-          title="View Notifications & Alerts"
-        >
-          <Bell className="w-4 h-4 text-gray-600" />
-          <span className="w-2 h-2 rounded-full bg-coral-500 absolute top-1.5 right-1.5 animate-pulse" />
-        </button>
+        {/* Notification Bell & Dropdown */}
+        <div className="relative" ref={notificationsRef}>
+          <button
+            onClick={() => setNotificationsOpen(!notificationsOpen)}
+            className="relative p-2 rounded-full bg-white border border-gray-200/80 hover:bg-gray-50 cursor-pointer shadow-2xs transition-colors"
+            title="View Notifications & Alerts"
+            aria-expanded={notificationsOpen}
+            aria-label={`Notifications, ${unreadCount} unread`}
+          >
+            <Bell className="w-4 h-4 text-gray-600" />
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-coral-500 text-white text-[10px] font-bold flex items-center justify-center border-2 border-white animate-pulse">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
+          </button>
+
+          {/* Notifications Popover Dropdown */}
+          {notificationsOpen && (
+            <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-gray-200/90 py-0 z-50 animate-in fade-in zoom-in-95 duration-150 overflow-hidden text-xs">
+              <div className="p-3.5 bg-peach-50/70 border-b border-gray-100 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-[#073746] text-sm">Notifications</span>
+                  {unreadCount > 0 && (
+                    <span className="px-2 py-0.5 rounded-full bg-coral-500 text-white text-[10px] font-bold">
+                      {unreadCount} new
+                    </span>
+                  )}
+                </div>
+                {unreadCount > 0 && (
+                  <button
+                    onClick={markAllAsRead}
+                    className="flex items-center gap-1 text-[11px] text-teal-800 hover:text-teal-950 font-medium hover:underline"
+                  >
+                    <CheckCheck className="w-3.5 h-3.5" />
+                    Mark all read
+                  </button>
+                )}
+              </div>
+
+              <div className="max-h-80 overflow-y-auto divide-y divide-gray-100">
+                {notifications.length === 0 ? (
+                  <div className="p-6 text-center text-gray-400">
+                    <Bell className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+                    <p className="font-medium text-gray-600">All caught up!</p>
+                    <p className="text-[11px] text-gray-400 mt-0.5">No active alerts or warnings</p>
+                  </div>
+                ) : (
+                  notifications.slice(0, 5).map((item) => {
+                    const read = isRead(item.id);
+                    let badgeColor = 'bg-blue-100 text-blue-700';
+                    let IconComponent = Sparkles;
+                    if (item.severity === 'danger') {
+                      badgeColor = 'bg-red-100 text-red-700';
+                      IconComponent = AlertTriangle;
+                    } else if (item.severity === 'warning') {
+                      badgeColor = 'bg-amber-100 text-amber-700';
+                      IconComponent = PieChart;
+                    } else if (item.type === 'goals') {
+                      badgeColor = 'bg-emerald-100 text-emerald-700';
+                      IconComponent = Target;
+                    }
+
+                    return (
+                      <div
+                        key={item.id}
+                        onClick={() => handleNotificationClick(item)}
+                        className={`p-3.5 hover:bg-peach-50/50 cursor-pointer transition-colors flex items-start gap-3 ${
+                          !read ? 'bg-peach-50/20' : 'opacity-75'
+                        }`}
+                      >
+                        <div className={`p-2 rounded-xl shrink-0 ${badgeColor}`}>
+                          <IconComponent className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between gap-1 mb-0.5">
+                            <p className={`font-bold truncate ${!read ? 'text-[#073746]' : 'text-gray-600'}`}>
+                              {item.title}
+                            </p>
+                            {!read && (
+                              <span className="w-2 h-2 rounded-full bg-coral-500 shrink-0" />
+                            )}
+                          </div>
+                          <p className="text-gray-500 line-clamp-2 text-[11px] leading-relaxed">
+                            {item.message}
+                          </p>
+                          <span className="text-[10px] text-gray-400 mt-1 block">
+                            {item.time}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+
+              <div className="p-2.5 bg-gray-50/80 border-t border-gray-100 text-center">
+                <Link
+                  to="/notifications"
+                  onClick={() => setNotificationsOpen(false)}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#073746] hover:text-coral-500 transition-colors"
+                >
+                  View all notifications &amp; alerts
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* User Profile Dropdown */}
         <div className="relative" ref={profileRef}>

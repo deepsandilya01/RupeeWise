@@ -14,6 +14,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import useAuth from '../../hooks/useAuth.js';
+import useToast from '../../hooks/useToast.js';
 import GoogleSignInButton from '../../components/auth/GoogleSignInButton.jsx';
 import Card from '../../components/ui/Card.jsx';
 import Badge from '../../components/ui/Badge.jsx';
@@ -22,6 +23,7 @@ import authService from '../../services/authService.js';
 export const RegisterPage = () => {
   const { isAuthenticated, role, isInitialized, register, isLoading, error, clearError } =
     useAuth();
+  const { toast } = useToast();
   const navigate = useNavigate();
 
   // Form states
@@ -93,11 +95,14 @@ export const RegisterPage = () => {
     });
 
     if (result.success) {
+      toast.success(`Account created successfully! Welcome to RupeeWise, ${result.user?.name || trimmedName}!`);
       if (result.user.role === 'admin') {
         navigate('/admin');
       } else {
         navigate('/dashboard');
       }
+    } else {
+      toast.error(result.error || 'Registration failed. Please try again.');
     }
   };
 

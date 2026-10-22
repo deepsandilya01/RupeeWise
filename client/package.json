@@ -1,7 +1,7 @@
 {
-  "name": "paisapilot-client",
+  "name": "rupeewise-client",
   "version": "1.0.0",
-  "description": "PaisaPilot AI Frontend - React, Redux Toolkit, Tailwind CSS",
+  "description": "RupeeWise AI Frontend - React, Redux Toolkit, Tailwind CSS",
   "type": "module",
   "scripts": {
     "dev": "vite",

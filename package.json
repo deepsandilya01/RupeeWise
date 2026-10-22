@@ -1,7 +1,7 @@
 {
-  "name": "paisapilot-ai",
+  "name": "rupeewise-ai",
   "version": "1.0.0",
-  "description": "PaisaPilot AI — AI-Powered Personal Finance Coach (Phase 1: Foundation + Google Auth + RBAC)",
+  "description": "RupeeWise AI — AI-Powered Personal Financial Intelligence Platform",
   "private": true,
   "type": "module",
   "scripts": {

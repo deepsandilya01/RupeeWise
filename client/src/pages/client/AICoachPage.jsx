@@ -17,6 +17,7 @@ import {
 } from '../../features/ai/aiThunks.js';
 import { addLocalUserMessage, setSelectedProvider } from '../../features/ai/aiSlice.js';
 import MarkdownMessage from '../../components/common/MarkdownMessage.jsx';
+import useToast from '../../hooks/useToast.js';
 import {
   Sparkles,
   Bot,
@@ -39,6 +40,7 @@ import {
 
 export const AICoachPage = () => {
   const dispatch = useAppDispatch();
+  const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const {
     insights,
@@ -151,40 +153,64 @@ export const AICoachPage = () => {
   const handleCreateGoal = async (e) => {
     e.preventDefault();
     if (!newGoal.name || !newGoal.targetAmount) return;
-    await dispatch(
-      createGoal({
-        name: newGoal.name,
-        targetAmount: Number(newGoal.targetAmount),
-        currentAmount: Number(newGoal.currentAmount || 0),
-        monthlyContribution: Number(newGoal.monthlyContribution || 0),
-        category: newGoal.category,
-      })
-    );
-    setGoalModalOpen(false);
-    setNewGoal({ name: '', targetAmount: '', currentAmount: '', monthlyContribution: '', category: 'Technology' });
+    try {
+      await dispatch(
+        createGoal({
+          name: newGoal.name,
+          targetAmount: Number(newGoal.targetAmount),
+          currentAmount: Number(newGoal.currentAmount || 0),
+          monthlyContribution: Number(newGoal.monthlyContribution || 0),
+          category: newGoal.category,
+        })
+      ).unwrap();
+      toast.success(`Savings goal "${newGoal.name}" created!`);
+      setGoalModalOpen(false);
+      setNewGoal({ name: '', targetAmount: '', currentAmount: '', monthlyContribution: '', category: 'Technology' });
+    } catch (err) {
+      toast.error(typeof err === 'string' ? err : 'Failed to create goal');
+    }
   };
 
   const handleContribute = async (e) => {
     e.preventDefault();
     if (!selectedGoal || !contribAmount) return;
-    await dispatch(addGoalContribution({ id: selectedGoal.id, amount: Number(contribAmount) }));
-    setContribModalOpen(false);
-    setSelectedGoal(null);
-    setContribAmount('');
+    try {
+      await dispatch(addGoalContribution({ id: selectedGoal.id, amount: Number(contribAmount) })).unwrap();
+      toast.success(`Contributed ₹${Number(contribAmount).toLocaleString('en-IN')} to ${selectedGoal.name}!`);
+      setContribModalOpen(false);
+      setSelectedGoal(null);
+      setContribAmount('');
+    } catch (err) {
+      toast.error(typeof err === 'string' ? err : 'Failed to record contribution');
+    }
+  };
+
+  const handleDeleteGoal = async (id, name) => {
+    try {
+      await dispatch(deleteGoal(id)).unwrap();
+      toast.success(`Goal "${name || 'item'}" removed`);
+    } catch (err) {
+      toast.error(typeof err === 'string' ? err : 'Failed to delete goal');
+    }
   };
 
   const handleSetBudget = async (e) => {
     e.preventDefault();
     if (!newBudget.category || !newBudget.monthlyLimit) return;
-    await dispatch(
-      setBudget({
-        category: newBudget.category,
-        monthlyLimit: Number(newBudget.monthlyLimit),
-        alertThreshold: Number(newBudget.alertThreshold || 80),
-      })
-    );
-    setBudgetModalOpen(false);
-    setNewBudget({ category: 'Food & Dining', monthlyLimit: '', alertThreshold: 80 });
+    try {
+      await dispatch(
+        setBudget({
+          category: newBudget.category,
+          monthlyLimit: Number(newBudget.monthlyLimit),
+          alertThreshold: Number(newBudget.alertThreshold || 80),
+        })
+      ).unwrap();
+      toast.success(`Monthly budget for ${newBudget.category} set to ₹${Number(newBudget.monthlyLimit).toLocaleString('en-IN')}`);
+      setBudgetModalOpen(false);
+      setNewBudget({ category: 'Food & Dining', monthlyLimit: '', alertThreshold: 80 });
+    } catch (err) {
+      toast.error(typeof err === 'string' ? err : 'Failed to update budget limit');
+    }
   };
 
   const wellnessScore = insights?.wellnessScore?.score || 78;
@@ -839,7 +865,7 @@ export const AICoachPage = () => {
                   </button>
 
                   <button
-                    onClick={() => dispatch(deleteGoal(g.id))}
+                    onClick={() => handleDeleteGoal(g.id, g.name)}
                     className="p-1 rounded-lg text-gray-400 hover:text-red-500"
                     title="Delete goal"
                   >

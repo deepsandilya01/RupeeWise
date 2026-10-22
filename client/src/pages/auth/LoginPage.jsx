@@ -15,6 +15,7 @@ import {
   Radio,
 } from 'lucide-react';
 import useAuth from '../../hooks/useAuth.js';
+import useToast from '../../hooks/useToast.js';
 import GoogleSignInButton from '../../components/auth/GoogleSignInButton.jsx';
 import Card from '../../components/ui/Card.jsx';
 import Badge from '../../components/ui/Badge.jsx';
@@ -23,6 +24,7 @@ import authService from '../../services/authService.js';
 export const LoginPage = () => {
   const { isAuthenticated, role, isInitialized, login, loginDemo, isLoading, error, clearError } =
     useAuth();
+  const { toast } = useToast();
   const navigate = useNavigate();
 
   // Form state
@@ -77,11 +79,14 @@ export const LoginPage = () => {
 
     const result = await login({ email: trimmedEmail, password });
     if (result.success) {
+      toast.success(`Welcome back, ${result.user?.name || 'User'}!`);
       if (result.user.role === 'admin') {
         navigate('/admin');
       } else {
         navigate('/dashboard');
       }
+    } else {
+      toast.error(result.error || 'Login failed. Please check credentials.');
     }
   };
 
@@ -93,11 +98,14 @@ export const LoginPage = () => {
     try {
       const result = await loginDemo(targetRole);
       if (result.success) {
+        toast.success(`Logged in as Demo ${targetRole === 'admin' ? 'Administrator' : 'Client'}`);
         if (result.user.role === 'admin') {
           navigate('/admin');
         } else {
           navigate('/dashboard');
         }
+      } else {
+        toast.error(result.error || `Unable to access Demo ${targetRole}`);
       }
     } finally {
       setDemoLoadingRole(null);

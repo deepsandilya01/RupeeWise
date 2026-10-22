@@ -18,6 +18,7 @@ import {
 import TransactionModal from '../../components/transactions/TransactionModal.jsx';
 import CsvImportModal from '../../components/transactions/CsvImportModal.jsx';
 import DeleteConfirmModal from '../../components/transactions/DeleteConfirmModal.jsx';
+import useToast from '../../hooks/useToast.js';
 import {
   Search,
   Plus,
@@ -55,6 +56,7 @@ const CATEGORIES = [
 
 export const TransactionsPage = () => {
   const dispatch = useAppDispatch();
+  const { toast } = useToast();
   const [searchParams] = useSearchParams();
   const { items, pagination, filters, summary, loading, mutationLoading, error } =
     useAppSelector((state) => state.transactions);
@@ -94,26 +96,45 @@ export const TransactionsPage = () => {
 
   // Handlers for mutations
   const handleSaveTransaction = async (formData) => {
-    if (editingTransaction) {
-      await dispatch(updateTransaction({ id: editingTransaction.id, data: formData }));
-    } else {
-      await dispatch(createTransaction(formData));
+    try {
+      if (editingTransaction) {
+        await dispatch(updateTransaction({ id: editingTransaction.id, data: formData })).unwrap();
+        toast.success('Transaction updated successfully');
+      } else {
+        await dispatch(createTransaction(formData)).unwrap();
+        toast.success('Transaction created successfully');
+      }
+      setModalOpen(false);
+      setEditingTransaction(null);
+      dispatch(fetchTransactions(filters));
+      dispatch(fetchTransactionSummary());
+    } catch (err) {
+      toast.error(typeof err === 'string' ? err : 'Failed to save transaction');
     }
-    setModalOpen(false);
-    setEditingTransaction(null);
-    dispatch(fetchTransactions(filters));
   };
 
   const handleDeleteTransaction = async (id) => {
-    await dispatch(deleteTransaction(id));
-    setDeletingTransaction(null);
-    dispatch(fetchTransactions(filters));
+    try {
+      await dispatch(deleteTransaction(id)).unwrap();
+      toast.success('Transaction deleted');
+      setDeletingTransaction(null);
+      dispatch(fetchTransactions(filters));
+      dispatch(fetchTransactionSummary());
+    } catch (err) {
+      toast.error(typeof err === 'string' ? err : 'Failed to delete transaction');
+    }
   };
 
   const handleImportCsv = async (transactions) => {
-    await dispatch(importTransactions(transactions));
-    setCsvModalOpen(false);
-    dispatch(fetchTransactions(filters));
+    try {
+      const res = await dispatch(importTransactions(transactions)).unwrap();
+      toast.success(`Imported ${res?.insertedCount || transactions.length} transactions successfully`);
+      setCsvModalOpen(false);
+      dispatch(fetchTransactions(filters));
+      dispatch(fetchTransactionSummary());
+    } catch (err) {
+      toast.error(typeof err === 'string' ? err : 'Failed to import CSV transactions');
+    }
   };
 
   // Format currency in INR

@@ -18,6 +18,8 @@ import HelpSupportPage from './pages/client/HelpSupportPage.jsx';
 import NotificationsPage from './pages/client/NotificationsPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import LandingPage from './pages/public/LandingPage.jsx';
+import PrivacyPage from './pages/public/PrivacyPage.jsx';
+import TermsPage from './pages/public/TermsPage.jsx';
 
 export const App = () => {
   const dispatch = useAppDispatch();
@@ -29,8 +31,10 @@ export const App = () => {
 
   return (
     <Routes>
-      {/* Public Landing Page */}
+      {/* Public Landing Page & Legal */}
       <Route path="/" element={<LandingPage />} />
+      <Route path="/privacy" element={<PrivacyPage />} />
+      <Route path="/terms" element={<TermsPage />} />
 
       {/* Public Authentication Routes */}
       <Route element={<AuthLayout />}>

@@ -5,6 +5,7 @@ import FeatureStrip from '../../components/landing/FeatureStrip.jsx';
 import ProductShowcase from '../../components/landing/ProductShowcase.jsx';
 import StatisticsStrip from '../../components/landing/StatisticsStrip.jsx';
 import DemoModal from '../../components/landing/DemoModal.jsx';
+import LandingFooter from '../../components/landing/LandingFooter.jsx';
 import { Link } from 'react-router-dom';
 
 export const LandingPage = () => {
@@ -43,21 +44,8 @@ export const LandingPage = () => {
         <StatisticsStrip />
       </main>
 
-      {/* Minimal Warm Footer */}
-      <footer className="py-12 border-t border-gray-200/60 bg-[#FAF6EE] text-center text-xs text-gray-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
-          <div className="flex flex-wrap items-center justify-center gap-6 text-[#073746] font-medium">
-            <a href="#product" className="hover:text-coral-500 transition-colors">Product</a>
-            <a href="#features" className="hover:text-coral-500 transition-colors">Features</a>
-            <a href="#how-it-works" className="hover:text-coral-500 transition-colors">How It Works</a>
-            <a href="#pricing" className="hover:text-coral-500 transition-colors">Pricing</a>
-            <Link to="/login" className="hover:text-coral-500 transition-colors">Client Sign In</Link>
-          </div>
-          <p className="text-[11px] text-gray-400">
-            RupeeWise AI &copy; {new Date().getFullYear()} &mdash; Intelligent Wealth &amp; Expense Tracking Platform. All rights reserved.
-          </p>
-        </div>
-      </footer>
+      {/* Comprehensive Professional Footer */}
+      <LandingFooter />
 
       {/* Interactive Walkthrough Demo Modal */}
       <DemoModal isOpen={demoOpen} onClose={() => setDemoOpen(false)} />

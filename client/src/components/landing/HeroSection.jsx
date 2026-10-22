@@ -97,23 +97,23 @@ export const HeroSection = ({ onWatchDemo }) => {
           </div>
 
           {/* Right Column: Perspective Dashboard + Floating Phone Mockup */}
-          <div className="lg:col-span-7 relative">
-            {/* Handwritten annotation 1: Plan Save Grow */}
-            <div className="hidden xl:block absolute -top-8 left-20 z-20 text-center pointer-events-none select-none">
+          <div className="lg:col-span-7 relative pt-8 lg:pt-0">
+            {/* Handwritten annotation 1: Plan Save Grow (Positioned above mockup with zero control collision) */}
+            <div className="hidden xl:block absolute -top-16 left-6 z-10 text-center pointer-events-none select-none">
               <div className="font-handwriting text-2xl text-[#073746]/85 font-bold leading-none rotate-[-4deg]">
                 Plan <br />
                 Save <br />
                 Grow
               </div>
               {/* Hand-drawn curved arrow pointing to dashboard */}
-              <svg className="w-12 h-10 mt-1 ml-4 text-[#073746]/70 stroke-current" viewBox="0 0 50 40" fill="none">
+              <svg className="w-12 h-10 mt-1 ml-6 text-[#073746]/70 stroke-current" viewBox="0 0 50 40" fill="none">
                 <path
-                  d="M10,5 C25,12 35,22 40,32"
+                  d="M10,5 C20,12 30,22 38,32"
                   strokeWidth="2"
                   strokeLinecap="round"
                 />
                 <path
-                  d="M32,28 L40,32 L42,22"
+                  d="M30,28 L38,32 L40,22"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -122,17 +122,17 @@ export const HeroSection = ({ onWatchDemo }) => {
             </div>
 
             {/* Tilted Dashboard Mockup */}
-            <div className="relative transform lg:rotate-[-3.5deg] lg:skew-y-[1.5deg] transition-transform duration-500 hover:rotate-[-1.5deg]">
+            <div className="relative z-20 transform lg:rotate-[-3.5deg] lg:skew-y-[1.5deg] transition-transform duration-500 hover:rotate-[-1.5deg]">
               <DashboardMockup />
 
               {/* Floating Phone Mockup overlapping bottom-right */}
-              <div className="absolute -bottom-10 -right-2 sm:-right-6 md:-right-8 z-30 transform rotate-[3deg] transition-transform duration-500 hover:rotate-[1deg] hover:scale-105">
+              <div className="absolute -bottom-10 -right-2 sm:-right-6 md:-right-8 z-30 transform rotate-[3deg] transition-transform duration-500 hover:rotate-[1deg] hover:scale-105 pointer-events-none sm:pointer-events-auto">
                 <PhoneMockup />
               </div>
             </div>
 
             {/* Handwritten annotation 2: Small Changes Big Futures. */}
-            <div className="hidden xl:block absolute -bottom-14 right-48 z-20 pointer-events-none select-none text-left">
+            <div className="hidden xl:block absolute -bottom-12 right-44 z-10 pointer-events-none select-none text-left">
               <div className="flex items-center gap-2">
                 <svg className="w-10 h-10 text-[#073746]/70 stroke-current transform rotate-[-20deg]" viewBox="0 0 50 40" fill="none">
                   <path
