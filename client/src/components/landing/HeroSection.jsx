@@ -53,7 +53,7 @@ export const HeroSection = ({ onWatchDemo }) => {
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center gap-3.5 pt-2">
               <button
-                onClick={() => navigate('/login')}
+                onClick={() => navigate('/register')}
                 className="inline-flex items-center gap-2.5 bg-[#073746] hover:bg-[#0C2B35] text-white text-sm sm:text-base font-bold px-7 py-3.5 rounded-full shadow-card hover:shadow-elevated transition-all active:translate-y-px"
               >
                 <span>Get Started</span>

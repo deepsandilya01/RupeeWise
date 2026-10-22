@@ -2,7 +2,13 @@ import express from 'express';
 import rateLimit from 'express-rate-limit';
 import authController from '../controllers/authController.js';
 import authenticate from '../middleware/authenticate.js';
-import { validateBody, googleAuthSchema } from '../middleware/validate.js';
+import {
+  validateBody,
+  googleAuthSchema,
+  registerSchema,
+  loginSchema,
+  demoAuthSchema,
+} from '../middleware/validate.js';
 
 const router = express.Router();
 
@@ -17,6 +23,15 @@ const authLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
+
+// POST /api/auth/register - Register with name, email, password
+router.post('/register', authLimiter, validateBody(registerSchema), authController.register);
+
+// POST /api/auth/login - Sign in with email, password
+router.post('/login', authLimiter, validateBody(loginSchema), authController.login);
+
+// POST /api/auth/demo - Sign in to authorized demo account (Demo Admin / Demo Client)
+router.post('/demo', authLimiter, validateBody(demoAuthSchema), authController.loginDemo);
 
 // POST /api/auth/google - Authenticate with Google ID credential
 router.post('/google', authLimiter, validateBody(googleAuthSchema), authController.loginWithGoogle);

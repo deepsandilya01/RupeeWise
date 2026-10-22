@@ -15,7 +15,8 @@
     "test:transactions": "node server/src/tests/test_transactions.js",
     "test:ai": "node server/src/tests/test_ai_engine.js",
     "test:admin": "node server/src/tests/test_phase5_admin.js",
-    "test": "node server/src/tests/test_endpoints.js && node server/src/tests/test_transactions.js && node server/src/tests/test_ai_engine.js && node server/src/tests/test_phase5_admin.js"
+    "test:auth": "node server/src/tests/test_auth_system.js",
+    "test": "node server/src/tests/test_endpoints.js && node server/src/tests/test_transactions.js && node server/src/tests/test_ai_engine.js && node server/src/tests/test_phase5_admin.js && node server/src/tests/test_auth_system.js"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

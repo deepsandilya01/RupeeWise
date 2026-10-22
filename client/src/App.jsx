@@ -8,6 +8,7 @@ import AuthLayout from './layouts/AuthLayout.jsx';
 import ClientLayout from './layouts/ClientLayout.jsx';
 import AdminLayout from './layouts/AdminLayout.jsx';
 import LoginPage from './pages/auth/LoginPage.jsx';
+import RegisterPage from './pages/auth/RegisterPage.jsx';
 import DashboardPage from './pages/client/DashboardPage.jsx';
 import TransactionsPage from './pages/client/TransactionsPage.jsx';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage.jsx';
@@ -31,10 +32,11 @@ export const App = () => {
       {/* Public Landing Page */}
       <Route path="/" element={<LandingPage />} />
 
-
       {/* Public Authentication Routes */}
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/signup" element={<Navigate to="/register" replace />} />
       </Route>
 
       {/* Protected Client Routes */}

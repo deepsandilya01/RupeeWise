@@ -127,11 +127,11 @@ export const DemoModal = ({ isOpen, onClose }) => {
           <button
             onClick={() => {
               onClose();
-              navigate('/login');
+              navigate('/register');
             }}
             className="inline-flex items-center gap-2 bg-[#073746] text-white text-xs font-bold px-5 py-2.5 rounded-full hover:bg-[#0C2B35] transition-colors"
           >
-            <span>Get Started with Google</span>
+            <span>Get Started Free</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>

@@ -25,6 +25,14 @@ export const LandingNavbar = () => {
     }
   };
 
+  const handleGetStartedNavigation = () => {
+    if (isAuthenticated) {
+      navigate(role === 'admin' ? '/admin' : '/dashboard');
+    } else {
+      navigate('/register');
+    }
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full bg-[#FAF6EE]/90 backdrop-blur-md transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
@@ -123,7 +131,7 @@ export const LandingNavbar = () => {
           </button>
 
           <button
-            onClick={handleAuthNavigation}
+            onClick={handleGetStartedNavigation}
             className="inline-flex items-center gap-2 bg-[#073746] hover:bg-[#0C2B35] text-white text-[14px] font-semibold px-5 py-2.5 rounded-full shadow-subtle hover:shadow-card transition-all active:translate-y-px"
           >
             <span>{isAuthenticated ? 'Open App' : 'Get Started'}</span>
@@ -179,7 +187,7 @@ export const LandingNavbar = () => {
               {isAuthenticated ? 'Go to Dashboard' : 'Sign In'}
             </button>
             <button
-              onClick={handleAuthNavigation}
+              onClick={handleGetStartedNavigation}
               className="w-full flex items-center justify-center gap-2 bg-[#073746] text-white py-2.5 rounded-full font-semibold text-sm shadow-sm"
             >
               <span>{isAuthenticated ? 'Open App' : 'Get Started'}</span>

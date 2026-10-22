@@ -21,6 +21,16 @@ export const userRepository = {
   },
 
   /**
+   * Find a user by email address including their passwordHash
+   * @param {string} email
+   * @returns {Promise<User|null>}
+   */
+  async findByEmailWithPassword(email) {
+    if (!email) return null;
+    return User.findOne({ email: email.toLowerCase().trim() }).select('+passwordHash').exec();
+  },
+
+  /**
    * Find a user by Google ID (subject)
    * @param {string} googleId
    * @returns {Promise<User|null>}
@@ -39,9 +49,12 @@ export const userRepository = {
     const user = new User({
       name: userData.name?.trim(),
       email: userData.email?.toLowerCase().trim(),
-      googleId: userData.googleId,
+      googleId: userData.googleId || undefined,
+      passwordHash: userData.passwordHash || undefined,
       picture: userData.picture || '',
       role: userData.role || 'client',
+      isDemo: Boolean(userData.isDemo),
+      authMethod: userData.authMethod || (userData.googleId ? 'google' : 'local'),
     });
     return user.save();
   },

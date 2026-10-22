@@ -36,6 +36,22 @@ export const connectDatabase = async () => {
     });
 
     isConnected = mongoose.connection.readyState === 1;
+
+    // Migrate/sync googleId index if legacy non-sparse unique index exists
+    if (isConnected) {
+      try {
+        const usersCollection = mongoose.connection.collection('users');
+        const indexes = await usersCollection.indexes();
+        const googleIdIndex = indexes.find((idx) => idx.name === 'googleId_1');
+        if (googleIdIndex && !googleIdIndex.sparse && !googleIdIndex.partialFilterExpression) {
+          await usersCollection.dropIndex('googleId_1');
+          console.log('[Database] Dropped legacy non-sparse googleId_1 index.');
+        }
+      } catch {
+        // Ignored if collection or index doesn't exist
+      }
+    }
+
     return isConnected;
   } catch (error) {
     isConnected = false;

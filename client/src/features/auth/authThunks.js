@@ -21,6 +21,51 @@ export const initializeAuth = createAsyncThunk(
 );
 
 /**
+ * Register with email and password
+ */
+export const registerUser = createAsyncThunk(
+  'auth/registerUser',
+  async ({ name, email, password }, { rejectWithValue }) => {
+    try {
+      const response = await authService.register({ name, email, password });
+      return response.user;
+    } catch (error) {
+      return rejectWithValue(error.message || 'Registration failed');
+    }
+  }
+);
+
+/**
+ * Sign in with email and password
+ */
+export const loginUser = createAsyncThunk(
+  'auth/loginUser',
+  async ({ email, password }, { rejectWithValue }) => {
+    try {
+      const response = await authService.login({ email, password });
+      return response.user;
+    } catch (error) {
+      return rejectWithValue(error.message || 'Login failed');
+    }
+  }
+);
+
+/**
+ * Sign in into authorized demo account (client or admin)
+ */
+export const loginDemo = createAsyncThunk(
+  'auth/loginDemo',
+  async (role, { rejectWithValue }) => {
+    try {
+      const response = await authService.loginDemo(role);
+      return response.user;
+    } catch (error) {
+      return rejectWithValue(error.message || 'Demo authentication failed');
+    }
+  }
+);
+
+/**
  * Authenticate with verified Google ID token
  */
 export const loginWithGoogle = createAsyncThunk(

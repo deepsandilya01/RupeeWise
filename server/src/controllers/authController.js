@@ -3,6 +3,66 @@ import { setAuthCookie, clearAuthCookie } from '../utils/token.js';
 
 export const authController = {
   /**
+   * Register with Email & Password
+   * POST /api/auth/register
+   */
+  async register(req, res, next) {
+    try {
+      const { name, email, password } = req.body;
+      const { user, token } = await authService.registerWithEmailPassword({ name, email, password });
+
+      setAuthCookie(res, token);
+
+      return res.status(201).json({
+        success: true,
+        user,
+      });
+    } catch (error) {
+      return next(error);
+    }
+  },
+
+  /**
+   * Login with Email & Password
+   * POST /api/auth/login
+   */
+  async login(req, res, next) {
+    try {
+      const { email, password } = req.body;
+      const { user, token } = await authService.loginWithEmailPassword({ email, password });
+
+      setAuthCookie(res, token);
+
+      return res.status(200).json({
+        success: true,
+        user,
+      });
+    } catch (error) {
+      return next(error);
+    }
+  },
+
+  /**
+   * Login into authorized demonstration account (Demo Admin or Demo Client)
+   * POST /api/auth/demo
+   */
+  async loginDemo(req, res, next) {
+    try {
+      const { role } = req.body;
+      const { user, token } = await authService.loginDemoAccount(role);
+
+      setAuthCookie(res, token);
+
+      return res.status(200).json({
+        success: true,
+        user,
+      });
+    } catch (error) {
+      return next(error);
+    }
+  },
+
+  /**
    * Handle Google Login
    * POST /api/auth/google
    */

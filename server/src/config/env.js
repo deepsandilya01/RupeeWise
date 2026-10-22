@@ -43,7 +43,8 @@ export const config = {
   adminEmails,
   isAdminEmail: (email) => {
     if (!email) return false;
-    return adminEmails.has(email.toLowerCase().trim());
+    const normalized = email.toLowerCase().trim();
+    return adminEmails.has(normalized) || normalized === 'demo-admin@rupeewise.ai';
   },
 };
 

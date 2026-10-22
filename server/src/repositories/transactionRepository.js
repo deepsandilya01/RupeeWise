@@ -22,6 +22,15 @@ export const transactionRepository = {
   },
 
   /**
+   * Count transactions matching a filter
+   * @param {Object} filter
+   * @returns {Promise<number>}
+   */
+  async count(filter = {}) {
+    return Transaction.countDocuments(filter).exec();
+  },
+
+  /**
    * Find a transaction by ID, strictly scoped to userId
    * @param {string} id
    * @param {string} userId

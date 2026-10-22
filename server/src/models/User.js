@@ -22,9 +22,12 @@ const userSchema = new mongoose.Schema(
     },
     googleId: {
       type: String,
-      required: [true, 'Google ID is required'],
-      unique: true,
-      index: true,
+      default: undefined,
+    },
+    passwordHash: {
+      type: String,
+      default: null,
+      select: false,
     },
     picture: {
       type: String,
@@ -39,13 +42,29 @@ const userSchema = new mongoose.Schema(
       default: 'client',
       index: true,
     },
+    isDemo: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
+    authMethod: {
+      type: String,
+      enum: ['google', 'local', 'demo'],
+      default: 'local',
+    },
   },
   {
     timestamps: true,
   }
 );
 
-// Method to return safe public profile
+// Ensure googleId is unique only when it is a non-null string
+userSchema.index(
+  { googleId: 1 },
+  { unique: true, partialFilterExpression: { googleId: { $type: 'string' } } }
+);
+
+// Method to return safe public profile (never exposes passwordHash)
 userSchema.methods.toSafeObject = function () {
   return {
     id: this._id.toString(),
@@ -53,6 +72,8 @@ userSchema.methods.toSafeObject = function () {
     email: this.email,
     picture: this.picture,
     role: this.role,
+    isDemo: Boolean(this.isDemo),
+    authMethod: this.authMethod || (this.googleId ? 'google' : 'local'),
     createdAt: this.createdAt,
     updatedAt: this.updatedAt,
   };
