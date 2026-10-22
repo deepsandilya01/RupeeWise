@@ -8,20 +8,36 @@
   --charcoal: #1A1D1A;
 }
 
+html {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: #D1DDD3 #F7F7F2;
+}
+
 body {
   background-color: #F7F7F2;
   color: #1A1D1A;
   font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
+  overflow-y: visible !important;
+  min-height: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom subtle scrollbar */
+#root {
+  min-height: 100%;
+  overflow: visible !important;
+}
+
+/* Custom subtle scrollbar (Single unified scrollbar) */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {

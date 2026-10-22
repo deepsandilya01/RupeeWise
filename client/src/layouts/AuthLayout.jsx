@@ -3,7 +3,7 @@ import { Outlet, Link } from 'react-router-dom';
 
 export const AuthLayout = () => {
   return (
-    <div className="min-h-screen bg-[#FAF6EE] flex flex-col justify-between p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+    <div className="min-h-screen bg-[#FAF6EE] flex flex-col justify-between p-4 sm:p-6 lg:p-8 relative">
       {/* Decorative peach ambient glows matching RupeeWise theme */}
       <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-[#FFE5D4]/40 blur-3xl pointer-events-none" />
       <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-[#FFE5D4]/40 blur-3xl pointer-events-none" />

@@ -11,7 +11,7 @@ export const LandingPage = () => {
   const [demoOpen, setDemoOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#FAF6EE] text-[#0B1D33] font-sans antialiased relative selection:bg-coral-100 selection:text-coral-600 overflow-x-hidden">
+    <div className="min-h-screen bg-[#FAF6EE] text-[#0B1D33] font-sans antialiased relative selection:bg-coral-100 selection:text-coral-600">
       {/* Background Organic Ambient Blobs */}
       {/* Bottom-Left Soft Peach/Navy Gradient Blob */}
       <div className="absolute -bottom-20 -left-20 -z-10 w-[500px] h-[500px] pointer-events-none opacity-70">
